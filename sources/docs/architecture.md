@@ -210,6 +210,15 @@ tickets dont il est propriétaire ou contributeur, etc.). L'interface lit les m�
 Différence voulue : dans Synapse Lite, le lead tech gère aussi les demandeurs (`admin.requesters`) et consulte
 les statistiques (`admin.statistics`).
 
+Gestion des accès : chaque page du menu s'ouvre avec une permission (`pages.board`, `pages.backlog`,
+`pages.planning`, `pages.tickets`, puis les `admin.*`, dont `admin.access` pour la page Gestion des accès). Les pages
+de chaque profil se choisissent dans `views/admin/AccessView.vue` et sont rangées dans `settings/1.json`
+(`access`, profil → permissions). `backend/access.ts` décrit les pages (`PAGES`), les droits par défaut
+(`DEFAULT_ACCESS`) et `accessOf`, qui nettoie la matrice lue et garde toujours `admin.access` aux
+administrateurs. `permissionsFor` ajoute ces pages aux actions fixes du profil (`ACTIONS`) ; `Backend.actor()`
+lit la matrice à chaque appel, donc l'API refuse aussitôt une page retirée. Le routeur renvoie vers
+`homeRoute()`, la première page du menu encore permise, et `AppLayout` quitte la page ouverte si elle est retirée.
+
 Ces règles organisent le travail ; elles ne protègent pas les données. Toute personne ayant accès au dossier peut
 en lire et modifier les fichiers : la sécurité est celle des droits sur le dossier partagé.
 

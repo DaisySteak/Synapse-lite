@@ -29,7 +29,7 @@ l'API _File System Access_, que Firefox et Safari ne proposent pas : ils affiche
 3. Chrome demande l'autorisation de modifier les fichiers : choisir **Modifier les fichiers**, puis, si Chrome le
    propose, **Autoriser à chaque visite** pour ne plus avoir à le refaire.
 4. L'utilisateur est connecté automatiquement si son identifiant Windows est déclaré comme matricule dans
-   **Paramétrage › Utilisateurs**. Sinon, l'écran de connexion s'affiche, prérempli, avec la raison. Aucun mot
+   **Habilitation › Utilisateurs**. Sinon, l'écran de connexion s'affiche, prérempli, avec la raison. Aucun mot
    de passe : c'est l'accès au dossier partagé qui protège les données.
 
 ### Matricule et connexion automatique
@@ -49,7 +49,7 @@ d'accès d'un clic (« Autoriser l'accès »). Le dossier se change à tout mome
 
 Un dossier de données neuf, ou remis à zéro, contient un seul compte : prénom `admin`, nom `admin`, matricule
 `admin`, profil Administrateur, et aucun type de ticket. Se connecter avec le matricule `admin`, puis créer les
-comptes de l'équipe dans **Paramétrage › Utilisateurs** (ajout, profil, désactivation) et les types de ticket
+comptes de l'équipe dans **Habilitation › Utilisateurs** (ajout, profil, désactivation) et les types de ticket
 dans **Paramétrage › Types de ticket**.
 
 ### Dossier partagé (OneDrive / SharePoint)
@@ -106,6 +106,22 @@ Menu **Application › Thème** : six thèmes (vert par défaut, bleu, violet, b
 est enregistré dans le dossier de données (`settings/1.json`) et s'applique à toute l'équipe en quelques
 secondes ; chaque navigateur réaffiche le dernier thème dès l'ouverture.
 
+### Gestion des accès (administrateurs)
+
+Menu **Habilitation › Gestion des accès** : un tableau des pages du menu, une colonne par profil
+(Administrateur, Lead tech, Utilisateur). Cocher ou décocher une case ouvre ou retire la page au profil, pour
+toute l'équipe, en quelques secondes. Une page retirée disparaît du menu et ne s'ouvre plus, même par un lien ;
+si c'était le Tableau, l'application s'ouvre sur la première page encore accessible. Les actions sur les tickets
+(créer, modifier, déplacer, supprimer, modérer) restent fixées par profil. Les administrateurs gardent toujours la
+page Gestion des accès. **Rétablir les droits par défaut** revient aux droits d'un dossier neuf :
+
+- Utilisateur : Tableau, Backlog, Planning, Tous les tickets ;
+- Lead tech : les mêmes, plus Statistiques et tout le groupe Paramétrage (Projets, Demandeurs, Tickets
+  récurrents, Types de ticket, Champs personnalisés) ;
+- Administrateur : toutes les pages.
+
+Le choix est enregistré dans `settings/1.json`, avec le thème. Une remise à zéro rétablit les droits par défaut.
+
 ### Statistiques (administrateurs et lead tech)
 
 Menu **Pilotage › Statistiques**, pour un mois, un trimestre ou une année (flèches pour changer de
@@ -133,7 +149,7 @@ demandeurs cumulent ce temps consommé.
 
 Les tickets récurrents sont créés à l'ouverture de l'application, une fois par jour et par poste (il n'y a pas
 de serveur pour le faire en tâche planifiée). Plusieurs postes peuvent le faire en même temps sans créer de
-doublon. Un administrateur peut aussi forcer la génération depuis **Organisation › Tickets récurrents**.
+doublon. Un administrateur peut aussi forcer la génération depuis **Paramétrage › Tickets récurrents**.
 
 ### Tickets supprimés et purge
 

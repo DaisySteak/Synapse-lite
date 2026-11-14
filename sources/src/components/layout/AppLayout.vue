@@ -5,6 +5,7 @@
  * with the data folder.
  */
 import { onBeforeUnmount, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import AppSidebar from '@/components/layout/AppSidebar.vue';
 import QuickCreateModal from '@/components/tickets/QuickCreateModal.vue';
 import TimeSpentModal from '@/components/tickets/TimeSpentModal.vue';
@@ -13,11 +14,14 @@ import { useDataSync } from '@/composables/useDataSync';
 import { useReferenceStore } from '@/stores/reference';
 import { useUiStore } from '@/stores/ui';
 import { useAuthStore } from '@/stores/auth';
+import { homeRoute } from '@/router';
 import { applyTheme } from '@/utils/themes';
 
 const reference = useReferenceStore();
 const ui = useUiStore();
 const auth = useAuthStore();
+const route = useRoute();
+const router = useRouter();
 
 useDataSync();
 
@@ -61,6 +65,15 @@ watch(
         if (theme) applyTheme(theme);
     },
     { immediate: true },
+);
+
+// Page closed to the profile by an administrator while it is open: leave it.
+watch(
+    () => auth.user?.permissions,
+    () => {
+        const permission = route.meta.permission;
+        if (auth.user && permission && !auth.can(permission)) void router.replace(homeRoute());
+    },
 );
 </script>
 

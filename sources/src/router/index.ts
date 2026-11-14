@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
+import { PAGES } from '@/backend/access';
 import { useAuthStore } from '@/stores/auth';
 import { useConnectionStore } from '@/stores/connection';
 import type { Permission } from '@/types/models';
@@ -39,25 +40,25 @@ const routes: RouteRecordRaw[] = [
                 path: 'tableau',
                 name: 'board',
                 component: () => import('@/views/BoardView.vue'),
-                meta: { title: 'Tableau' },
+                meta: { permission: 'pages.board', title: 'Tableau' },
             },
             {
                 path: 'backlog',
                 name: 'backlog',
                 component: () => import('@/views/BacklogView.vue'),
-                meta: { title: 'Backlog' },
+                meta: { permission: 'pages.backlog', title: 'Backlog' },
             },
             {
                 path: 'tickets',
                 name: 'tickets',
                 component: () => import('@/views/TicketListView.vue'),
-                meta: { title: 'Tous les tickets' },
+                meta: { permission: 'pages.tickets', title: 'Tous les tickets' },
             },
             {
                 path: 'planning',
                 name: 'planning',
                 component: () => import('@/views/PlanningView.vue'),
-                meta: { title: 'Planning' },
+                meta: { permission: 'pages.planning', title: 'Planning' },
             },
             {
                 path: 'tickets/:id(\\d+)',
@@ -121,6 +122,12 @@ const routes: RouteRecordRaw[] = [
                 meta: { permission: 'admin.theme', title: 'Thème de couleur' },
             },
             {
+                path: 'admin/habilitations',
+                name: 'admin-access',
+                component: () => import('@/views/admin/AccessView.vue'),
+                meta: { permission: 'admin.access', title: 'Gestion des accès' },
+            },
+            {
                 path: 'admin/statistiques',
                 name: 'admin-statistics',
                 component: () => import('@/views/admin/StatisticsView.vue'),
@@ -168,11 +175,7 @@ router.beforeEach(async (to) => {
     await auth.initialize();
 
     if (to.meta.guest) {
-        return auth.isAuthenticated
-            ? { name: 'board' }
-            : to.name === 'connect'
-              ? { name: 'login', query: to.query }
-              : true;
+        return auth.isAuthenticated ? homeRoute() : to.name === 'connect' ? { name: 'login', query: to.query } : true;
     }
 
     if (!auth.isAuthenticated) {
@@ -180,7 +183,8 @@ router.beforeEach(async (to) => {
     }
 
     if (to.meta.permission && !auth.can(to.meta.permission)) {
-        return { name: 'board' };
+        const home = homeRoute();
+        return home === to.path ? { name: 'profile' } : home;
     }
 
     return true;
@@ -189,6 +193,16 @@ router.beforeEach(async (to) => {
 router.afterEach((to) => {
     document.title = to.meta.title ? `${to.meta.title} · Synapse Lite` : 'Synapse Lite';
 });
+
+/**
+ * First page of the menu the signed-in user may open (the board, unless an
+ * administrator closed it to the profile), or the profile page.
+ */
+export function homeRoute(): string {
+    const auth = useAuthStore();
+
+    return PAGES.find((page) => auth.can(page.permission))?.to ?? '/profil';
+}
 
 function redirectQuery(fullPath: string): Record<string, string> {
     return fullPath !== '/' && !fullPath.startsWith('/connexion') && !fullPath.startsWith('/dossier')

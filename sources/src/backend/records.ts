@@ -8,7 +8,7 @@
  *   ├── projects/<id>.json
  *   ├── requesters/<id>.json
  *   ├── custom-fields/<id>.json
- *   ├── settings/1.json                   team settings (color theme)
+ *   ├── settings/1.json                   team settings (color theme, access)
  *   ├── recurring-tickets/<id>.json       templates and recurrence rules
  *   ├── tickets/<id>.json                 tickets (soft deleted: deleted_at)
  *   ├── comments/<ticket id>/<id>.json
@@ -64,6 +64,8 @@ export interface SettingsRecord extends Timestamps {
     id: 1;
     /** Color theme (utils/themes.ts). */
     theme: string;
+    /** Pages accessible to each profile (backend/access.ts), absent until first changed. */
+    access?: Partial<Record<string, string[]>>;
     updated_by: number;
 }
 

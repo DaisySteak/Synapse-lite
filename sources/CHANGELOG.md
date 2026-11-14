@@ -2,6 +2,34 @@
 
 Ce projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
+## [1.10.2] - 2026-11-14
+
+### Modifié
+
+- Droits par défaut : les lead tech gèrent aussi les types de ticket et les champs personnalisés (tout le groupe
+  Paramétrage). S'applique à tout dossier dont la gestion des accès n'a pas encore été modifiée.
+
+## [1.10.1] - 2026-11-14
+
+### Modifié
+
+- Menu : le groupe **Organisation** devient **Paramétrage** et reçoit Types de ticket et Champs personnalisés ;
+  l'ancien Paramétrage devient **Habilitation**, avec Utilisateurs et la page Habilitations, renommée
+  **Gestion des accès**. Les droits de chaque profil ne changent pas.
+  - Suivi des tickets : Tableau, Backlog, Planning, Tous les tickets ;
+  - Pilotage : Statistiques ;
+  - Paramétrage : Projets, Demandeurs, Tickets récurrents, Types de ticket, Champs personnalisés ;
+  - Habilitation : Utilisateurs, Gestion des accès ;
+  - Application : Thème, Gestion des données.
+
+## [1.10.0] - 2026-11-14
+
+### Ajouté
+
+- Page **Habilitations** (menu Application, administrateurs) : les pages accessibles à chaque profil, cochées dans
+  un tableau et appliquées à toute l'équipe. Les administrateurs gardent toujours cette page ; bouton pour
+  rétablir les droits par défaut. Une page retirée disparaît du menu et l'API la refuse.
+
 ## [1.9.0] - 2026-11-14
 
 ### Modifié

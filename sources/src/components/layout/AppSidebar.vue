@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useReferenceStore } from '@/stores/reference';
 import { useUiStore } from '@/stores/ui';
 import type { Permission } from '@/types/models';
+import { PAGES, type PagePermission } from '@/backend/access';
 
 interface NavItem {
     to: string;
@@ -27,53 +28,38 @@ interface NavSection {
     items: NavItem[];
 }
 
+/** Icon of each page of the menu. */
+const ICONS: Record<PagePermission, IconName> = {
+    'pages.board': 'board',
+    'pages.backlog': 'inbox',
+    'pages.planning': 'planning',
+    'pages.tickets': 'rows',
+    'admin.statistics': 'chart',
+    'admin.projects': 'briefcase',
+    'admin.requesters': 'megaphone',
+    'admin.recurring_tickets': 'repeat',
+    'admin.epics': 'tag',
+    'admin.custom_fields': 'sliders',
+    'admin.users': 'users',
+    'admin.access': 'shield',
+    'admin.theme': 'palette',
+    'admin.data': 'database',
+};
+
 /**
- * Menu grouped by use, then by profile: the follow-up pages for everyone,
- * the statistics and what a lead tech can organise, the settings kept for the
- * administrators, and last the rare or sensitive pages (theme, data).
+ * Menu grouped by use (backend/access.ts gives the pages, their group and
+ * their order): ticket follow-up, Pilotage, Paramétrage, Habilitation,
+ * Application. Each page shows only for the profiles an administrator opened
+ * it to (Gestion des accès).
  */
-const sections: NavSection[] = [
-    {
-        items: [
-            { to: '/tableau', label: 'Tableau', icon: 'board' },
-            { to: '/backlog', label: 'Backlog', icon: 'inbox' },
-            { to: '/planning', label: 'Planning', icon: 'planning' },
-            { to: '/tickets', label: 'Tous les tickets', icon: 'rows' },
-        ],
-    },
-    {
-        title: 'Pilotage',
-        items: [{ to: '/admin/statistiques', label: 'Statistiques', icon: 'chart', permission: 'admin.statistics' }],
-    },
-    {
-        title: 'Organisation',
-        items: [
-            { to: '/admin/projets', label: 'Projets', icon: 'briefcase', permission: 'admin.projects' },
-            { to: '/admin/demandeurs', label: 'Demandeurs', icon: 'megaphone', permission: 'admin.requesters' },
-            {
-                to: '/admin/tickets-recurrents',
-                label: 'Tickets récurrents',
-                icon: 'repeat',
-                permission: 'admin.recurring_tickets',
-            },
-        ],
-    },
-    {
-        title: 'Paramétrage',
-        items: [
-            { to: '/admin/utilisateurs', label: 'Utilisateurs', icon: 'users', permission: 'admin.users' },
-            { to: '/admin/epics', label: 'Types de ticket', icon: 'tag', permission: 'admin.epics' },
-            { to: '/admin/champs', label: 'Champs personnalisés', icon: 'sliders', permission: 'admin.custom_fields' },
-        ],
-    },
-    {
-        title: 'Application',
-        items: [
-            { to: '/admin/theme', label: 'Thème', icon: 'palette', permission: 'admin.theme' },
-            { to: '/admin/donnees', label: 'Gestion des données', icon: 'database', permission: 'admin.data' },
-        ],
-    },
-];
+const sections: NavSection[] = PAGES.reduce<NavSection[]>((result, page) => {
+    const item: NavItem = { to: page.to, label: page.label, icon: ICONS[page.permission], permission: page.permission };
+    const last = result.at(-1);
+    if (last && (last.title ?? '') === page.group) last.items.push(item);
+    else result.push({ title: page.group || undefined, items: [item] });
+
+    return result;
+}, []);
 
 /** Groups with at least one page the user may open. */
 const visibleSections = computed(() =>

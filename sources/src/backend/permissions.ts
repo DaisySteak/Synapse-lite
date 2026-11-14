@@ -6,6 +6,7 @@
  * the profiles, exactly as in Synapse.
  */
 import type { Permission, RoleCode } from '@/types/models';
+import { DEFAULT_ACCESS, type AccessMatrix } from './access';
 import type { AttachmentRecord, CommentRecord, TicketRecord, UserRecord } from './records';
 
 /** Code of the backlog step. */
@@ -19,6 +20,10 @@ export const ROLE_LABELS: Record<RoleCode, string> = {
     user: 'Utilisateur',
 };
 
+/**
+ * Actions on the tickets, fixed by profile. The pages (menu) are chosen by an
+ * administrator in "Gestion des accès" (access.ts).
+ */
 const LEAD_TECH: Permission[] = [
     'tickets.create',
     'tickets.update_any',
@@ -26,36 +31,34 @@ const LEAD_TECH: Permission[] = [
     'tickets.delete',
     'backlog.manage',
     'comments.moderate',
-    'admin.projects',
-    'admin.recurring_tickets',
-    'admin.requesters',
-    'admin.statistics',
 ];
 
-const MATRIX: Record<RoleCode, Permission[]> = {
-    admin: [
-        ...LEAD_TECH,
-        'tickets.purge',
-        'admin.users',
-        'admin.epics',
-        'admin.custom_fields',
-        'admin.data',
-        'admin.theme',
-    ],
+const ACTIONS: Record<RoleCode, Permission[]> = {
+    admin: [...LEAD_TECH, 'tickets.purge'],
     lead_tech: LEAD_TECH,
     user: ['tickets.create', 'tickets.update_own'],
 };
 
-export function permissionsFor(user: Pick<UserRecord, 'role' | 'is_active'>): Permission[] {
-    return user.is_active ? [...MATRIX[user.role]] : [];
+/**
+ * Permissions of a user: the actions of the profile and the pages the
+ * administrators opened to it (the default access when nothing was chosen).
+ */
+export function permissionsFor(
+    user: Pick<UserRecord, 'role' | 'is_active'>,
+    access: AccessMatrix = DEFAULT_ACCESS,
+): Permission[] {
+    return user.is_active ? [...ACTIONS[user.role], ...access[user.role]] : [];
 }
 
 /** Connected user, with the resolved permissions. */
 export class Actor {
     private readonly granted: Set<Permission>;
 
-    constructor(readonly user: UserRecord) {
-        this.granted = new Set(permissionsFor(user));
+    constructor(
+        readonly user: UserRecord,
+        access?: AccessMatrix,
+    ) {
+        this.granted = new Set(permissionsFor(user, access));
     }
 
     get id(): number {

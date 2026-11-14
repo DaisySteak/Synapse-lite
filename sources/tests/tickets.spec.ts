@@ -248,7 +248,9 @@ describe('permissions', () => {
         signIn(LEAD);
         expect(await statusOf(adminApi.projects.list())).toBe(200);
         expect(await statusOf(adminApi.recurringTickets.list())).toBe(200);
-        expect(await statusOf(adminApi.epics.list())).toBe(403);
+        expect(await statusOf(adminApi.epics.list())).toBe(200);
+        expect(await statusOf(adminApi.customFields.list())).toBe(200);
+        expect(await statusOf(adminApi.users.list())).toBe(403);
     });
 
     it('exposes the reference data', async () => {

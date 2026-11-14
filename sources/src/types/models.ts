@@ -21,7 +21,12 @@ export type Permission =
     | 'admin.recurring_tickets'
     | 'admin.data'
     | 'admin.statistics'
-    | 'admin.theme';
+    | 'admin.theme'
+    | 'admin.access'
+    | 'pages.board'
+    | 'pages.backlog'
+    | 'pages.planning'
+    | 'pages.tickets';
 
 export type RoleCode = 'admin' | 'lead_tech' | 'user';
 
