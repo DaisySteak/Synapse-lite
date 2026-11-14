@@ -1,0 +1,63 @@
+/**
+ * Inline SVG icon paths (stroke icons on a 24x24 grid), bundled with the
+ * application: no icon font nor CDN is required.
+ */
+export const ICONS = {
+    board: 'M3 4h5v16H3zM10 4h4v11h-4zM16 4h5v8h-5z',
+    planning: 'M3 5h18M3 5v15h18V5M8 3v4M16 3v4M6 10h6M9 14h8M6 17h5',
+    plus: 'M12 5v14M5 12h14',
+    users: 'M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM22 19v-1a4 4 0 0 0-3-3.9M16 4.1a3 3 0 0 1 0 5.8',
+    user: 'M20 20v-1a5 5 0 0 0-5-5H9a5 5 0 0 0-5 5v1M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+    tag: 'M3 12V4h8l10 10-8 8L3 12zM7.5 7.5h.01',
+    megaphone: 'M3 10v4l3 1 2 5h2l-1-4 9 3V5L6 9zM20 9v6',
+    sliders: 'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6',
+    logout: 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+    paperclip: 'M21 11.5l-8.5 8.5a5 5 0 0 1-7-7L14 4.5a3.5 3.5 0 0 1 5 5L10.5 18a2 2 0 0 1-3-3L15 7.5',
+    message: 'M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z',
+    'chevron-left': 'M15 18l-6-6 6-6',
+    'chevron-right': 'M9 18l6-6-6-6',
+    'chevron-down': 'M6 9l6 6 6-6',
+    x: 'M18 6L6 18M6 6l12 12',
+    search: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5',
+    trash: 'M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6',
+    edit: 'M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4',
+    external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5',
+    folder: 'M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
+    clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
+    /** Finish flag: due date. */
+    flag: 'M5 21V4M5 4h12l-2.5 4 2.5 4H5',
+    inbox: 'M3 13h5l1.5 3h5L16 13h5M3 13l3-8h12l3 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z',
+    repeat: 'M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3',
+    briefcase: 'M3 8h18v12H3zM8 8V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3M3 13h18',
+    rows: 'M3 5h18M3 10h18M3 15h18M3 20h18',
+    play: 'M7 4l13 8-13 8z',
+    'arrow-right': 'M5 12h14M13 6l6 6-6 6',
+    alert: 'M12 9v4M12 17h.01M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z',
+    check: 'M20 6L9 17l-5-5',
+    filter: 'M3 5h18l-7 8v6l-4 2v-8z',
+    download: 'M12 3v12M7 10l5 5 5-5M5 21h14',
+    upload: 'M12 21V9M7 14l5-5 5 5M5 3h14',
+    restore: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
+    history: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2',
+    bold: 'M7 4h6a4 4 0 0 1 0 8H7zM7 12h7a4 4 0 0 1 0 8H7z',
+    italic: 'M19 4h-9M14 20H5M15 4L9 20',
+    strike: 'M4 12h16M16 6a4 3 0 0 0-4-2c-2.5 0-4 1.2-4 3s2 2.5 4 3M8 18a4 3 0 0 0 4 2c2.5 0 4-1.3 4-3',
+    heading: 'M6 4v16M18 4v16M6 12h12',
+    list: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',
+    'list-ordered': 'M10 6h10M10 12h10M10 18h10M4 4v4M3 18h3l-3 3h3M3 11a1.5 1.5 0 0 1 3 0c0 1-3 2-3 3h3',
+    'list-check': 'M10 6h10M10 12h10M10 18h10M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17',
+    quote: 'M6 17h3l2-4V7H5v6h3zM14 17h3l2-4V7h-6v6h3z',
+    code: 'M16 18l6-6-6-6M8 6l-6 6 6 6',
+    link: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',
+    table: 'M3 4h18v16H3zM3 10h18M3 15h18M9 4v16M15 4v16',
+    minus: 'M5 12h14',
+    columns: 'M3 4h18v16H3zM12 4v16',
+    file: 'M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6',
+    database:
+        'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+    palette:
+        'M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.9 1.4-1.9-.3-.9.3-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10zM7.5 12h.01M9.5 7.5h.01M14.5 7.5h.01M17 11h.01',
+    chart: 'M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6M20 16V6',
+} as const;
+
+export type IconName = keyof typeof ICONS;

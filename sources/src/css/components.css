@@ -1,0 +1,300 @@
+/*
+ * Composants génériques (classes utilitaires partagées).
+ * Les composants Vue gardent leurs styles spécifiques en <style scoped>.
+ */
+
+/* Boutons ------------------------------------------------------------------ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 34px;
+    padding: 0 var(--space-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--color-brand-600);
+    color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--color-brand-700);
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--color-surface-alt);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+}
+
+.btn-danger:hover:not(:disabled) {
+    filter: brightness(0.92);
+}
+
+.btn-sm {
+    height: 28px;
+    padding: 0 var(--space-3);
+    font-size: var(--font-size-sm);
+}
+
+.btn-icon {
+    width: 32px;
+    padding: 0;
+}
+
+/* Formulaires --------------------------------------------------------------- */
+.form-grid {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-4);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+}
+
+.field-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.field-label .required {
+    color: var(--color-accent);
+    margin-left: 2px;
+}
+
+.field-help {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+}
+
+.field-error {
+    font-size: var(--font-size-xs);
+    color: var(--color-danger);
+}
+
+.input,
+.select,
+.textarea {
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 10px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.input:hover,
+.select:hover,
+.textarea:hover {
+    border-color: var(--color-brand-300);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+    outline: none;
+    border-color: var(--color-brand-500);
+    box-shadow: var(--focus-ring);
+}
+
+.input.has-error,
+.select.has-error,
+.textarea.has-error {
+    border-color: var(--color-danger);
+}
+
+.input-lg {
+    min-height: 42px;
+    font-size: var(--font-size-lg);
+}
+
+.checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.checkbox input {
+    accent-color: var(--color-brand-600);
+    width: 16px;
+    height: 16px;
+}
+
+/* Cartes et panneaux -------------------------------------------------------- */
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.card-body {
+    padding: var(--space-5);
+}
+
+.section-title {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+}
+
+/* Tableaux ------------------------------------------------------------------ */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-alt);
+}
+
+.table td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: var(--color-brand-50);
+}
+
+.table .actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Divers -------------------------------------------------------------------- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    background: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.badge-success {
+    background: #e5f3e6;
+    color: var(--color-success);
+}
+
+.badge-muted {
+    background: #eceff0;
+    color: var(--color-text-subtle);
+}
+
+.muted {
+    color: var(--color-text-muted);
+}
+
+.mono {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.page-content {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: var(--space-5) var(--space-6);
+}
+
+/* Search field of the page toolbars ----------------------------------------- */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: 30px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text-subtle);
+}
+
+.search-box:focus-within {
+    border-color: var(--color-brand-500);
+    box-shadow: var(--focus-ring);
+}
+
+.search-box input {
+    width: 180px;
+    border: 0;
+    outline: none;
+    background: transparent;
+}
+
+.toolbar-filter {
+    width: 150px;
+}
