@@ -218,7 +218,7 @@ describe('statistics api', () => {
         signIn(USER);
     });
 
-    it('is kept for the administrators', async () => {
+    it('is open to the administrators and the leads, not to the simple users', async () => {
         const files = await createFolder();
         await openAs(files, ADMIN);
         const requesterId = await createRequester();
@@ -235,6 +235,12 @@ describe('statistics api', () => {
         expect(stats.requesters[0]).toMatchObject({ name: 'Support informatique', time_spent: 3 });
 
         await openAs(files, LEAD);
+        expect(
+            (await statisticsApi.compute({ kind: 'month', day: '2026-11-13', staleDays: 14, overloadThreshold: 8 }))
+                .tiles.closed,
+        ).toBe(1);
+
+        await openAs(files, USER);
         expect(
             await statusOf(
                 statisticsApi.compute({ kind: 'year', day: '2026-11-13', staleDays: 14, overloadThreshold: 8 }),

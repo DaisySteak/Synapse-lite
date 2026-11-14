@@ -21,31 +21,69 @@ const reference = useReferenceStore();
 const ui = useUiStore();
 const router = useRouter();
 
-const mainItems: NavItem[] = [
-    { to: '/tableau', label: 'Tableau', icon: 'board' },
-    { to: '/backlog', label: 'Backlog', icon: 'inbox' },
-    { to: '/tickets', label: 'Tous les tickets', icon: 'rows' },
-    { to: '/planning', label: 'Planning', icon: 'planning' },
-];
+interface NavSection {
+    /** Heading of the group; the first group (ticket follow-up) has none. */
+    title?: string;
+    items: NavItem[];
+}
 
-const adminItems: NavItem[] = [
-    { to: '/admin/utilisateurs', label: 'Utilisateurs', icon: 'users', permission: 'admin.users' },
-    { to: '/admin/projets', label: 'Projets', icon: 'briefcase', permission: 'admin.projects' },
+/**
+ * Menu grouped by use, then by profile: the follow-up pages for everyone,
+ * the statistics and what a lead tech can organise, the settings kept for the
+ * administrators, and last the rare or sensitive pages (theme, data).
+ */
+const sections: NavSection[] = [
     {
-        to: '/admin/tickets-recurrents',
-        label: 'Tickets récurrents',
-        icon: 'repeat',
-        permission: 'admin.recurring_tickets',
+        items: [
+            { to: '/tableau', label: 'Tableau', icon: 'board' },
+            { to: '/backlog', label: 'Backlog', icon: 'inbox' },
+            { to: '/planning', label: 'Planning', icon: 'planning' },
+            { to: '/tickets', label: 'Tous les tickets', icon: 'rows' },
+        ],
     },
-    { to: '/admin/epics', label: 'Types de ticket', icon: 'tag', permission: 'admin.epics' },
-    { to: '/admin/demandeurs', label: 'Demandeurs', icon: 'megaphone', permission: 'admin.requesters' },
-    { to: '/admin/champs', label: 'Champs personnalisés', icon: 'sliders', permission: 'admin.custom_fields' },
-    { to: '/admin/donnees', label: 'Gestion des données', icon: 'database', permission: 'admin.data' },
-    { to: '/admin/statistiques', label: 'Statistiques', icon: 'chart', permission: 'admin.statistics' },
-    { to: '/admin/theme', label: 'Thème', icon: 'palette', permission: 'admin.theme' },
+    {
+        title: 'Pilotage',
+        items: [{ to: '/admin/statistiques', label: 'Statistiques', icon: 'chart', permission: 'admin.statistics' }],
+    },
+    {
+        title: 'Organisation',
+        items: [
+            { to: '/admin/projets', label: 'Projets', icon: 'briefcase', permission: 'admin.projects' },
+            { to: '/admin/demandeurs', label: 'Demandeurs', icon: 'megaphone', permission: 'admin.requesters' },
+            {
+                to: '/admin/tickets-recurrents',
+                label: 'Tickets récurrents',
+                icon: 'repeat',
+                permission: 'admin.recurring_tickets',
+            },
+        ],
+    },
+    {
+        title: 'Paramétrage',
+        items: [
+            { to: '/admin/utilisateurs', label: 'Utilisateurs', icon: 'users', permission: 'admin.users' },
+            { to: '/admin/epics', label: 'Types de ticket', icon: 'tag', permission: 'admin.epics' },
+            { to: '/admin/champs', label: 'Champs personnalisés', icon: 'sliders', permission: 'admin.custom_fields' },
+        ],
+    },
+    {
+        title: 'Application',
+        items: [
+            { to: '/admin/theme', label: 'Thème', icon: 'palette', permission: 'admin.theme' },
+            { to: '/admin/donnees', label: 'Gestion des données', icon: 'database', permission: 'admin.data' },
+        ],
+    },
 ];
 
-const visibleAdminItems = computed(() => adminItems.filter((item) => !item.permission || auth.can(item.permission)));
+/** Groups with at least one page the user may open. */
+const visibleSections = computed(() =>
+    sections
+        .map((section) => ({
+            ...section,
+            items: section.items.filter((item) => !item.permission || auth.can(item.permission)),
+        }))
+        .filter((section) => section.items.length > 0),
+);
 const currentUser = computed(() => (auth.user ? reference.userMap.get(auth.user.id) : undefined));
 
 async function logout(): Promise<void> {
@@ -75,15 +113,12 @@ async function logout(): Promise<void> {
         </button>
 
         <nav class="nav" aria-label="Navigation principale">
-            <RouterLink v-for="item in mainItems" :key="item.to" :to="item.to" class="nav-item" :title="item.label">
-                <AppIcon :name="item.icon" />
-                <span class="label">{{ item.label }}</span>
-            </RouterLink>
-
-            <template v-if="visibleAdminItems.length">
-                <p class="nav-section label">Administration</p>
+            <template v-for="section in visibleSections" :key="section.title ?? 'main'">
+                <p v-if="section.title" class="nav-section">
+                    <span class="label">{{ section.title }}</span>
+                </p>
                 <RouterLink
-                    v-for="item in visibleAdminItems"
+                    v-for="item in section.items"
                     :key="item.to"
                     :to="item.to"
                     class="nav-item"
@@ -205,6 +240,7 @@ async function logout(): Promise<void> {
 
 .nav-section {
     margin: var(--space-4) var(--space-2) var(--space-1);
+    min-height: 1px;
     font-size: var(--font-size-xs);
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -300,7 +336,12 @@ async function logout(): Promise<void> {
     color: #fff;
 }
 
-/* Collapsed menu: icons only */
+/* Collapsed menu: icons only; the headings become a thin separator. */
+.collapsed .nav-section {
+    margin: var(--space-2) var(--space-2);
+    border-top: 1px solid rgb(255 255 255 / 15%);
+}
+
 .collapsed .label,
 .collapsed .brand-name {
     display: none;

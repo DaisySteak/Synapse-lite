@@ -180,7 +180,7 @@ couleur au chargement.
 ## Statistiques
 
 Page `views/admin/StatisticsView.vue`, API `src/api/statistics.ts`, permission `admin.statistics`
-(administrateurs). Les calculs sont des fonctions pures dans `backend/statistics.ts` (`computeStatistics`), sur
+(administrateurs et lead tech). Les calculs sont des fonctions pures dans `backend/statistics.ts` (`computeStatistics`), sur
 les tickets non supprimés déjà en mémoire ; les définitions des indicateurs sont en tête du fichier.
 `utils/periods.ts` découpe la période en semaines du lundi au dimanche (mois, trimestre) ou en mois (année) ;
 les semaines à venir valent `null` et interrompent les courbes.
@@ -207,7 +207,8 @@ navigateur) et réparation des numéros en double.
 `src/backend/permissions.ts` reprend `PermissionResolver` et les _policies_ de Synapse : mêmes profils
 (administrateur, lead tech, utilisateur), mêmes permissions, mêmes règles (un utilisateur ne modifie que les
 tickets dont il est propriétaire ou contributeur, etc.). L'interface lit les mêmes drapeaux `can`.
-Différence voulue : dans Synapse Lite, le lead tech gère aussi les demandeurs (`admin.requesters`).
+Différence voulue : dans Synapse Lite, le lead tech gère aussi les demandeurs (`admin.requesters`) et consulte
+les statistiques (`admin.statistics`).
 
 Ces règles organisent le travail ; elles ne protègent pas les données. Toute personne ayant accès au dossier peut
 en lire et modifier les fichiers : la sécurité est celle des droits sur le dossier partagé.

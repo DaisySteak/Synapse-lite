@@ -29,6 +29,7 @@ const LEAD_TECH: Permission[] = [
     'admin.projects',
     'admin.recurring_tickets',
     'admin.requesters',
+    'admin.statistics',
 ];
 
 const MATRIX: Record<RoleCode, Permission[]> = {
@@ -39,7 +40,6 @@ const MATRIX: Record<RoleCode, Permission[]> = {
         'admin.epics',
         'admin.custom_fields',
         'admin.data',
-        'admin.statistics',
         'admin.theme',
     ],
     lead_tech: LEAD_TECH,

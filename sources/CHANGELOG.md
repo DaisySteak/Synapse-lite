@@ -2,6 +2,19 @@
 
 Ce projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
+## [1.9.0] - 2026-11-14
+
+### Modifié
+
+- Les lead tech accèdent à la page Statistiques (groupe **Pilotage** du menu).
+- Menu réorganisé en groupes titrés, chacun ne s'affichant que s'il contient une page accessible :
+    - suivi des tickets : Tableau, Backlog, Planning, Tous les tickets ;
+    - **Pilotage** : Statistiques ;
+    - **Organisation** (lead tech et administrateurs) : Projets, Demandeurs, Tickets récurrents ;
+    - **Paramétrage** : Utilisateurs, Types de ticket, Champs personnalisés ;
+    - **Application** : Thème, Gestion des données.
+- Menu replié : un trait sépare les groupes.
+
 ## [1.8.0] - 2026-11-14
 
 ### Modifié

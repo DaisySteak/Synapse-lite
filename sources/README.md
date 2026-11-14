@@ -12,6 +12,7 @@ synapse_lite/
 └── sources/                ← le code source (ce dossier), pour faire évoluer l'application
     └── Synapse Lite.html   ← l'application (complète, autonome), ouverte par le lanceur
 ```
+
 ## Utilisation
 
 ### Navigateur
@@ -28,7 +29,7 @@ l'API _File System Access_, que Firefox et Safari ne proposent pas : ils affiche
 3. Chrome demande l'autorisation de modifier les fichiers : choisir **Modifier les fichiers**, puis, si Chrome le
    propose, **Autoriser à chaque visite** pour ne plus avoir à le refaire.
 4. L'utilisateur est connecté automatiquement si son identifiant Windows est déclaré comme matricule dans
-   **Administration › Utilisateurs**. Sinon, l'écran de connexion s'affiche, prérempli, avec la raison. Aucun mot
+   **Paramétrage › Utilisateurs**. Sinon, l'écran de connexion s'affiche, prérempli, avec la raison. Aucun mot
    de passe : c'est l'accès au dossier partagé qui protège les données.
 
 ### Matricule et connexion automatique
@@ -48,8 +49,8 @@ d'accès d'un clic (« Autoriser l'accès »). Le dossier se change à tout mome
 
 Un dossier de données neuf, ou remis à zéro, contient un seul compte : prénom `admin`, nom `admin`, matricule
 `admin`, profil Administrateur, et aucun type de ticket. Se connecter avec le matricule `admin`, puis créer les
-comptes de l'équipe dans **Administration › Utilisateurs** (ajout, profil, désactivation) et les types de ticket
-dans **Administration › Types de ticket**.
+comptes de l'équipe dans **Paramétrage › Utilisateurs** (ajout, profil, désactivation) et les types de ticket
+dans **Paramétrage › Types de ticket**.
 
 ### Dossier partagé (OneDrive / SharePoint)
 
@@ -69,7 +70,7 @@ Le fonctionnement détaillé (organisation des fichiers, accès simultanés) est
 
 ### Gestion des données (administrateurs)
 
-La page **Administration › Gestion des données** regroupe les opérations sur l'ensemble des données :
+La page **Application › Gestion des données** regroupe les opérations sur l'ensemble des données :
 
 - **Modification de masse** : remplace un propriétaire, un type de ticket ou un demandeur par un autre sur tous les
   tickets non supprimés et sur les tickets récurrents. Chaque ticket garde la trace du changement dans son
@@ -101,13 +102,13 @@ date s'affiche jour par jour et s'enregistre au relâchement.
 
 ### Thème de couleur (administrateurs)
 
-Menu **Administration > Thème** : six thèmes (vert par défaut, bleu, violet, bordeaux, orange, ardoise). Le choix
+Menu **Application › Thème** : six thèmes (vert par défaut, bleu, violet, bordeaux, orange, ardoise). Le choix
 est enregistré dans le dossier de données (`settings/1.json`) et s'applique à toute l'équipe en quelques
 secondes ; chaque navigateur réaffiche le dernier thème dès l'ouverture.
 
-### Statistiques (administrateurs)
+### Statistiques (administrateurs et lead tech)
 
-Menu **Administration > Statistiques**, pour un mois, un trimestre ou une année (flèches pour changer de
+Menu **Pilotage › Statistiques**, pour un mois, un trimestre ou une année (flèches pour changer de
 période). Les blocs marqués « À ce jour » montrent l'état actuel, les autres ce qui s'est passé sur la période :
 
 - un ticket **ouvert** n'est ni terminé ni au backlog ; il est **en retard** quand son échéance est dépassée ;
@@ -132,7 +133,7 @@ demandeurs cumulent ce temps consommé.
 
 Les tickets récurrents sont créés à l'ouverture de l'application, une fois par jour et par poste (il n'y a pas
 de serveur pour le faire en tâche planifiée). Plusieurs postes peuvent le faire en même temps sans créer de
-doublon. Un administrateur peut aussi forcer la génération depuis **Administration › Tickets récurrents**.
+doublon. Un administrateur peut aussi forcer la génération depuis **Organisation › Tickets récurrents**.
 
 ### Tickets supprimés et purge
 
