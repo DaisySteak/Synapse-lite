@@ -3,7 +3,8 @@
  * Quick ticket creation, available everywhere (button or "C" key).
  *
  * Only the title, the type (epic) and the requester are required; everything
- * else has a sensible default (owner = me, status = À faire, no dates). The
+ * else has a sensible default (owner = me, status = À faire, start = today
+ * except in the backlog, no planned end). The
  * backlog only accepts tickets from lead techs and administrators.
  * Ctrl+Entrée creates the ticket; "Créer un autre" keeps the dialog open.
  */
@@ -13,6 +14,7 @@ import { errorMessage, fieldErrors } from '@/api/errors';
 import { ticketsApi } from '@/api/tickets';
 import MarkdownEditor from '@/components/markdown/MarkdownEditor.vue';
 import CustomFieldInput from '@/components/tickets/CustomFieldInput.vue';
+import DatePresets from '@/components/tickets/DatePresets.vue';
 import AppIcon from '@/components/ui/AppIcon.vue';
 import BaseModal from '@/components/ui/BaseModal.vue';
 import MultiSelect from '@/components/ui/MultiSelect.vue';
@@ -20,6 +22,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useReferenceStore } from '@/stores/reference';
 import { useUiStore } from '@/stores/ui';
 import type { TicketPayload } from '@/types/models';
+import { toIsoDate, today } from '@/utils/dates';
 
 const ui = useUiStore();
 const auth = useAuthStore();
@@ -58,6 +61,8 @@ function storedId(key: string): number | null {
 }
 
 function emptyForm(): Form {
+    const statusCode = ui.quickCreateDefaults.status_code ?? 'todo';
+
     return {
         title: '',
         // The last epic / requester used are proposed again (fast input).
@@ -67,9 +72,10 @@ function emptyForm(): Form {
             : null,
         project_id: ui.quickCreateDefaults.project_id ?? null,
         owner_id: auth.user?.id ?? null,
-        status_code: ui.quickCreateDefaults.status_code ?? 'todo',
+        status_code: statusCode,
         due_date: '',
-        start_date: '',
+        // Work starts today, except for a ticket put aside in the backlog.
+        start_date: statusCode === 'backlog' ? '' : toIsoDate(today()),
         description: '',
         data_processing_code: '',
         work_folder_url: '',
@@ -229,7 +235,7 @@ function onKeydown(event: KeyboardEvent): void {
 
             <div class="form-row">
                 <div class="field">
-                    <label class="field-label">Propriétaire</label>
+                    <label class="field-label">Responsable</label>
                     <MultiSelect v-model="form.owner_id" :options="userOptions" :invalid="!!errors.owner_id" />
                 </div>
                 <div class="field">
@@ -259,6 +265,7 @@ function onKeydown(event: KeyboardEvent): void {
                 <div class="field">
                     <label class="field-label" for="qc-start">Date de début</label>
                     <input id="qc-start" v-model="form.start_date" type="date" class="input" />
+                    <DatePresets kind="start" :model-value="form.start_date" @choose="form.start_date = $event" />
                 </div>
                 <div class="field">
                     <label class="field-label" for="qc-due">Fin prévisionnelle</label>
@@ -269,11 +276,17 @@ function onKeydown(event: KeyboardEvent): void {
                         class="input"
                         :class="{ 'has-error': errors.due_date }"
                     />
+                    <DatePresets
+                        kind="due"
+                        :start-date="form.start_date"
+                        :model-value="form.due_date"
+                        @choose="form.due_date = $event"
+                    />
                     <span v-if="errors.due_date" class="field-error">{{ errors.due_date }}</span>
                 </div>
             </div>
             <p class="field-help dates-help">
-                Dates facultatives : le ticket n'apparaît dans le planning qu'avec une date de début.
+                Dates facultatives. Sans date de début, le ticket n'apparaît pas dans le planning.
             </p>
 
             <CustomFieldInput

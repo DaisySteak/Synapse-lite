@@ -136,7 +136,7 @@ const columns = computed(() =>
         { key: 'epic', label: 'Type' },
         { key: 'project', label: 'Projet' },
         { key: 'requester', label: 'Demandeur' },
-        { key: 'owner', label: 'Propriétaire' },
+        { key: 'owner', label: 'Responsable' },
         { key: 'start', label: 'Début' },
         { key: 'due', label: 'Fin prév.' },
         { key: 'created', label: 'Créé le' },

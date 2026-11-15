@@ -680,7 +680,7 @@ function epicOf(template: RecurringTicket) {
 
                 <div class="form-row">
                     <div class="field">
-                        <label class="field-label">Propriétaire<span class="required">*</span></label>
+                        <label class="field-label">Responsable<span class="required">*</span></label>
                         <MultiSelect v-model="form.owner_id" :options="userOptions" :invalid="!!errors.owner_id" />
                         <span v-if="errors.owner_id" class="field-error">{{ errors.owner_id }}</span>
                     </div>

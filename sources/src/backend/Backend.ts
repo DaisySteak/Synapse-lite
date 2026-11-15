@@ -3,7 +3,7 @@
  * in the browser on top of the data folder.
  */
 import type { FileStore } from '@/storage/FileStore';
-import { accessOf } from './access';
+import { storedAccess } from './access';
 import { todayIso } from './clock';
 import { Database, type SyncResult } from './database';
 import { ApiError, unauthenticated } from './errors';
@@ -72,7 +72,7 @@ export class Backend {
 
         if (!user?.is_active) throw unauthenticated();
 
-        return new Actor(user, accessOf(this.db.settings.get(1)?.access));
+        return new Actor(user, storedAccess(this.db.settings.get(1)));
     }
 
     /** Signed-in user, or null. */

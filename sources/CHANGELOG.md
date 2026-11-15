@@ -2,6 +2,41 @@
 
 Ce projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
+## [1.12.0] - 2026-11-15
+
+### Ajouté
+
+- Date de début : boutons rapides **Demain**, **Sem. prochaine** (lundi de la semaine prochaine) et
+  **Mois prochain** (premier jour du mois prochain), à la création d'un ticket et sur sa fiche.
+- Gestion des accès : sous la ligne **Tableau**, la sous-ligne **Modifier le nombre de jours de la colonne
+  Terminé**. Accordée par défaut aux administrateurs et aux lead tech, y compris dans un dossier dont les accès ont
+  déjà été modifiés.
+
+### Modifié
+
+- « Propriétaire » devient **Responsable** dans tous les écrans, filtres et exports.
+- Les pages Thème et Gestion des données sont réunies dans la page **Paramétrage** (menu Application), avec les
+  six thèmes sur une ligne en haut de la page. Les anciens liens y mènent.
+- Le nombre de jours de la colonne Terminé du tableau est le même pour toute l'équipe (enregistré dans
+  `settings/1.json`) ; seuls les profils habilités le modifient, les autres le voient sans champ de saisie.
+
+## [1.11.0] - 2026-11-15
+
+### Ajouté
+
+- Fin prévisionnelle : boutons rapides **Fin de journée**, **Fin de semaine** (vendredi) et **Fin de mois**, à la
+  création d'un ticket et sur sa fiche. Ils se comptent depuis la date de début du ticket, ou depuis aujourd'hui
+  sans date de début ; un samedi ou un dimanche donne le vendredi suivant.
+
+### Modifié
+
+- Création d'un ticket : la date de début est préremplie à la date du jour (sauf pour un ticket créé au backlog),
+  ce qui le fait apparaître dans le planning. Elle peut être changée ou effacée.
+
+### Corrigé
+
+- Temps consommé : le bouton rapide choisi restait illisible tant que la souris le survolait.
+
 ## [1.10.2] - 2026-11-14
 
 ### Modifié

@@ -68,11 +68,12 @@ un partage réseau. Recommandations :
 Le fonctionnement détaillé (organisation des fichiers, accès simultanés) est décrit dans
 [docs/architecture.md](docs/architecture.md).
 
-### Gestion des données (administrateurs)
+### Paramétrage (administrateurs)
 
-La page **Application › Gestion des données** regroupe les opérations sur l'ensemble des données :
+La page **Application › Paramétrage** affiche en haut les six thèmes de couleur sur une ligne (voir ci-dessous),
+puis les opérations sur l'ensemble des données :
 
-- **Modification de masse** : remplace un propriétaire, un type de ticket ou un demandeur par un autre sur tous les
+- **Modification de masse** : remplace un responsable, un type de ticket ou un demandeur par un autre sur tous les
   tickets non supprimés et sur les tickets récurrents. Chaque ticket garde la trace du changement dans son
   historique ; un ticket qui change de type reçoit un nouveau numéro dans ce type.
 - **Sauvegarde** : télécharge un fichier `.zip` contenant tout le dossier `data` (pièces jointes comprises).
@@ -95,14 +96,14 @@ données**, est une sauvegarde complète. SharePoint conserve en plus l'historiq
 
 ### Planning
 
-Le survol d'une barre affiche le ticket, son propriétaire, son statut, son demandeur et ses dates. Pour changer
+Le survol d'une barre affiche le ticket, son responsable, son statut, son demandeur et ses dates. Pour changer
 les dates d'un ticket que l'on peut modifier, saisir à la souris le bord gauche de sa barre (date de début) ou
 son bord droit (date de fin prévisionnelle, ou date de fin réelle d'un ticket terminé) et le faire glisser : la
 date s'affiche jour par jour et s'enregistre au relâchement.
 
 ### Thème de couleur (administrateurs)
 
-Menu **Application › Thème** : six thèmes (vert par défaut, bleu, violet, bordeaux, orange, ardoise). Le choix
+En haut de la page **Application › Paramétrage** : six thèmes (vert par défaut, bleu, violet, bordeaux, orange, ardoise). Le choix
 est enregistré dans le dossier de données (`settings/1.json`) et s'applique à toute l'équipe en quelques
 secondes ; chaque navigateur réaffiche le dernier thème dès l'ouverture.
 
@@ -110,15 +111,22 @@ secondes ; chaque navigateur réaffiche le dernier thème dès l'ouverture.
 
 Menu **Habilitation › Gestion des accès** : un tableau des pages du menu, une colonne par profil
 (Administrateur, Lead tech, Utilisateur). Cocher ou décocher une case ouvre ou retire la page au profil, pour
-toute l'équipe, en quelques secondes. Une page retirée disparaît du menu et ne s'ouvre plus, même par un lien ;
+toute l'équipe, en quelques secondes. Sous certaines pages, une ligne en retrait accorde une fonctionnalité de
+cette page :
+
+- sous **Tableau**, **Modifier le nombre de jours de la colonne Terminé**. Ce nombre (20 par défaut) est le même
+  pour toute l'équipe : les profils cochés le changent dans l'en-tête de la colonne, les autres le voient sans
+  pouvoir le modifier.
+
+Une fonctionnalité ne se coche que si sa page est ouverte au profil, et retirer la page la retire aussi. Une page retirée disparaît du menu et ne s'ouvre plus, même par un lien ;
 si c'était le Tableau, l'application s'ouvre sur la première page encore accessible. Les actions sur les tickets
 (créer, modifier, déplacer, supprimer, modérer) restent fixées par profil. Les administrateurs gardent toujours la
 page Gestion des accès. **Rétablir les droits par défaut** revient aux droits d'un dossier neuf :
 
 - Utilisateur : Tableau, Backlog, Planning, Tous les tickets ;
-- Lead tech : les mêmes, plus Statistiques et tout le groupe Paramétrage (Projets, Demandeurs, Tickets
-  récurrents, Types de ticket, Champs personnalisés) ;
-- Administrateur : toutes les pages.
+- Lead tech : les mêmes, plus le nombre de jours de la colonne Terminé, Statistiques et tout le groupe
+  Paramétrage (Projets, Demandeurs, Tickets récurrents, Types de ticket, Champs personnalisés) ;
+- Administrateur : toutes les pages et fonctionnalités.
 
 Le choix est enregistré dans `settings/1.json`, avec le thème. Une remise à zéro rétablit les droits par défaut.
 
@@ -136,6 +144,16 @@ période). Les blocs marqués « À ce jour » montrent l'état actuel, les autr
 - un ticket **bloqué** est en attente, ou ouvert sans aucune modification depuis le nombre de jours choisi.
 
 Chaque bloc s'exporte vers Excel ; « Tout exporter » réunit tous les blocs et une synthèse dans un classeur.
+
+### Dates d'un ticket
+
+À la création, la date de début est préremplie à la date du jour (vide pour un ticket créé au backlog). Sous la
+date de début, trois boutons la fixent d'un clic : **Demain**, **Sem. prochaine** (le lundi de la semaine
+prochaine) et **Mois prochain** (le premier jour du mois prochain).
+
+Sous la fin prévisionnelle, trois boutons la fixent depuis la date de début (ou aujourd'hui sans date de début) :
+**Fin de journée** (le jour même), **Fin de semaine** (le vendredi ; un samedi ou un dimanche donne le vendredi
+suivant) et **Fin de mois** (le dernier jour du mois). Les mêmes boutons sont sur la fiche du ticket.
 
 ### Temps consommé
 
@@ -159,7 +177,7 @@ propose alors de le restaurer ou de le supprimer définitivement.
 
 La **suppression définitive** d'un ticket (ticket, commentaires, historique et pièces jointes effacés du dossier)
 se fait ligne par ligne dans **Tous les tickets**, après confirmation. La **purge**, qui supprime définitivement
-soit les tickets déjà supprimés, soit tous les tickets, se trouve dans **Gestion des données** : l'administrateur
+soit les tickets déjà supprimés, soit tous les tickets, se trouve dans **Paramétrage** : l'administrateur
 doit taper la phrase « Je confirme la purge des tickets » avant que le bouton ne s'active.
 
 Ces opérations sont irréversibles, hors historique des versions de SharePoint. Les numéros des tickets effacés ne

@@ -143,7 +143,7 @@ type SheetKey =
 const ticketColumns = (daysHeader: string) => [
     { header: 'Ticket', width: 14 },
     { header: 'Titre', width: 50 },
-    { header: 'Propriétaire', width: 24 },
+    { header: 'Responsable', width: 24 },
     { header: 'Demandeur', width: 24 },
     { header: 'Statut', width: 14 },
     { header: 'Échéance', width: 12 },
@@ -433,7 +433,7 @@ async function exportSheets(keys: SheetKey[]): Promise<void> {
                     <StatCard
                         title="Charge par personne"
                         :scope="TODAY_SCOPE"
-                        help="Tickets ouverts dont la personne est propriétaire (hors backlog)."
+                        help="Tickets ouverts dont la personne est responsable (hors backlog)."
                         @export="exportSheets(['load'])"
                     >
                         <template #tools>
@@ -645,7 +645,7 @@ async function exportSheets(keys: SheetKey[]): Promise<void> {
                             <thead>
                                 <tr>
                                     <th>Ticket en retard</th>
-                                    <th>Propriétaire</th>
+                                    <th>Responsable</th>
                                     <th class="number">Retard</th>
                                 </tr>
                             </thead>
@@ -686,7 +686,7 @@ async function exportSheets(keys: SheetKey[]): Promise<void> {
                         <thead>
                             <tr>
                                 <th>Ticket</th>
-                                <th>Propriétaire</th>
+                                <th>Responsable</th>
                                 <th>Demandeur</th>
                                 <th>Raison</th>
                                 <th class="number">Sans modification</th>

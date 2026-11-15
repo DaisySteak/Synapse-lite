@@ -1,13 +1,21 @@
 <script setup lang="ts">
 /**
  * Access rights ("Gestion des accès", administrators): the pages of the menu
- * each profile may open. Every change is saved at once in the data folder and
+ * each profile may open, and the features of these pages (sub-rows). Every change is saved at once in the data folder and
  * applies to the whole team; the administrators always keep this page.
  */
 import { computed, onMounted, ref } from 'vue';
 import { errorMessage } from '@/api/errors';
 import { settingsApi } from '@/api/settings';
-import { LOCKED_ACCESS, PAGES, ROLES, type AccessMatrix, type PageAccess } from '@/backend/access';
+import {
+    ACCESS_ITEMS,
+    FEATURES,
+    LOCKED_ACCESS,
+    PAGES,
+    ROLES,
+    type AccessMatrix,
+    type PagePermission,
+} from '@/backend/access';
 import { ROLE_LABELS } from '@/backend/permissions';
 import PageHeader from '@/components/layout/PageHeader.vue';
 import AppIcon from '@/components/ui/AppIcon.vue';
@@ -21,22 +29,45 @@ const ui = useUiStore();
 const matrix = ref<AccessMatrix | null>(null);
 const saving = ref(false);
 
-/** Pages by group of the menu. */
+/** Row of the table: a page, or a feature of the page above it. */
+interface AccessRow {
+    permission: PagePermission;
+    label: string;
+    /** Page of a feature (sub-row), granted first. */
+    page?: PagePermission;
+}
+
+/** Pages by group of the menu, each followed by its features. */
 const groups = computed(() => {
-    const result: { title: string; pages: PageAccess[] }[] = [];
+    const result: { title: string; rows: AccessRow[] }[] = [];
     for (const page of PAGES) {
         const title = page.group || 'Suivi des tickets';
+        const rows: AccessRow[] = [
+            { permission: page.permission, label: page.label },
+            ...FEATURES.filter((feature) => feature.page === page.permission),
+        ];
         const group = result.find((candidate) => candidate.title === title);
-        if (group) group.pages.push(page);
-        else result.push({ title, pages: [page] });
+        if (group) group.rows.push(...rows);
+        else result.push({ title, rows });
     }
 
     return result;
 });
 
-const isLocked = (role: RoleCode, page: PageAccess) => LOCKED_ACCESS[role]?.includes(page.permission) ?? false;
-const isGranted = (role: RoleCode, page: PageAccess) => matrix.value?.[role].includes(page.permission) ?? false;
+const isLocked = (role: RoleCode, row: AccessRow) => LOCKED_ACCESS[role]?.includes(row.permission) ?? false;
+const has = (role: RoleCode, permission: PagePermission) => matrix.value?.[role].includes(permission) ?? false;
+const isGranted = (role: RoleCode, row: AccessRow) => has(role, row.permission);
+/** A feature is only offered when its page is open to the profile. */
+const isDisabled = (role: RoleCode, row: AccessRow) =>
+    saving.value || isLocked(role, row) || (row.page !== undefined && !has(role, row.page));
 const countOf = (role: RoleCode) => matrix.value?.[role].length ?? 0;
+
+function titleOf(role: RoleCode, row: AccessRow): string {
+    if (isLocked(role, row)) return 'Toujours accessible aux administrateurs';
+    if (row.page && !has(role, row.page)) return 'Ouvrez d’abord la page à ce profil';
+
+    return `${row.label} pour le profil ${ROLE_LABELS[role]}`;
+}
 
 async function save(next: AccessMatrix, message: string): Promise<void> {
     saving.value = true;
@@ -52,17 +83,22 @@ async function save(next: AccessMatrix, message: string): Promise<void> {
     }
 }
 
-function toggle(role: RoleCode, page: PageAccess): void {
-    if (!matrix.value || saving.value || isLocked(role, page)) return;
+function toggle(role: RoleCode, row: AccessRow): void {
+    if (!matrix.value || isDisabled(role, row)) return;
 
-    const granted = isGranted(role, page);
-    const pages = granted
-        ? matrix.value[role].filter((permission) => permission !== page.permission)
-        : [...matrix.value[role], page.permission];
+    const granted = isGranted(role, row);
+    // Closing a page also takes back its features.
+    const removed = new Set<PagePermission>([
+        row.permission,
+        ...FEATURES.filter((feature) => feature.page === row.permission).map((feature) => feature.permission),
+    ]);
+    const rights = granted
+        ? matrix.value[role].filter((permission) => !removed.has(permission))
+        : [...matrix.value[role], row.permission];
 
     void save(
-        { ...matrix.value, [role]: pages },
-        `${page.label} : ${granted ? 'retirée' : 'ouverte'} au profil ${ROLE_LABELS[role]}.`,
+        { ...matrix.value, [role]: rights },
+        `${row.label} : ${granted ? 'retiré' : 'accordé'} au profil ${ROLE_LABELS[role]}.`,
     );
 }
 
@@ -91,7 +127,10 @@ onMounted(async () => {
 
 <template>
     <div class="page">
-        <PageHeader title="Gestion des accès" subtitle="Pages du menu accessibles à chaque profil, pour toute l'équipe">
+        <PageHeader
+            title="Gestion des accès"
+            subtitle="Pages du menu et fonctionnalités accessibles à chaque profil, pour toute l'équipe"
+        >
             <button class="btn btn-secondary" type="button" :disabled="saving || !matrix" @click="restoreDefaults">
                 <AppIcon name="restore" :size="16" />
                 Rétablir les droits par défaut
@@ -100,10 +139,11 @@ onMounted(async () => {
 
         <div class="page-content">
             <p class="muted intro">
-                Cochez les pages que chaque profil peut ouvrir. Chaque changement est enregistré tout de suite et
-                s'applique en quelques secondes. Une page retirée disparaît du menu et ne s'ouvre plus, même par un
-                lien. Les actions sur les tickets (créer, modifier, déplacer, supprimer) restent celles du profil. Les
-                administrateurs gardent toujours cette page, pour ne jamais bloquer l'application.
+                Cochez les pages que chaque profil peut ouvrir et, en retrait sous leur page, les fonctionnalités qui
+                lui sont permises. Chaque changement est enregistré tout de suite et s'applique en quelques secondes.
+                Une page retirée disparaît du menu et ne s'ouvre plus, même par un lien. Les actions sur les tickets
+                (créer, modifier, déplacer, supprimer) restent celles du profil. Les administrateurs gardent toujours
+                cette page, pour ne jamais bloquer l'application.
             </p>
 
             <div class="card access-card">
@@ -114,7 +154,7 @@ onMounted(async () => {
                             <th>Page</th>
                             <th v-for="role in ROLES" :key="role" class="role">
                                 {{ ROLE_LABELS[role] }}
-                                <small>{{ countOf(role) }} / {{ PAGES.length }}</small>
+                                <small>{{ countOf(role) }} / {{ ACCESS_ITEMS.length }}</small>
                             </th>
                         </tr>
                     </thead>
@@ -122,20 +162,19 @@ onMounted(async () => {
                         <tr class="group">
                             <th :colspan="ROLES.length + 1">{{ group.title }}</th>
                         </tr>
-                        <tr v-for="page in group.pages" :key="page.permission">
-                            <td class="page-name">{{ page.label }}</td>
+                        <tr v-for="row in group.rows" :key="row.permission" :class="{ feature: row.page }">
+                            <td class="page-name">
+                                <AppIcon v-if="row.page" name="chevron-right" :size="13" class="sub-icon" />
+                                {{ row.label }}
+                            </td>
                             <td v-for="role in ROLES" :key="role" class="cell">
                                 <input
                                     type="checkbox"
-                                    :checked="isGranted(role, page)"
-                                    :disabled="saving || isLocked(role, page)"
-                                    :title="
-                                        isLocked(role, page)
-                                            ? 'Toujours accessible aux administrateurs'
-                                            : `${page.label} pour le profil ${ROLE_LABELS[role]}`
-                                    "
-                                    :aria-label="`${page.label}, ${ROLE_LABELS[role]}`"
-                                    @change="toggle(role, page)"
+                                    :checked="isGranted(role, row)"
+                                    :disabled="isDisabled(role, row)"
+                                    :title="titleOf(role, row)"
+                                    :aria-label="`${row.label}, ${ROLE_LABELS[role]}`"
+                                    @change="toggle(role, row)"
                                 />
                             </td>
                         </tr>
@@ -183,6 +222,17 @@ onMounted(async () => {
 
 .page-name {
     font-weight: 600;
+}
+
+.feature .page-name {
+    padding-left: var(--space-6, 32px);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.sub-icon {
+    margin-right: 2px;
+    vertical-align: -2px;
 }
 
 .cell input {

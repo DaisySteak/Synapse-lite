@@ -65,7 +65,7 @@ export const CUSTOM_FIELD_TYPE_OPTIONS: Option<CustomFieldType>[] = (
 
 /** Functional settings. */
 export const SETTINGS: AppSettings = {
-    // Days a closed ticket stays visible in the "Terminé" column (editable on the board).
+    // Days a closed ticket stays visible in the "Terminé" column; data/settings/1.json once changed on the board.
     closed_visible_days: 20,
     // Planning: length of the bar of a ticket without due date.
     open_ended_days: 14,

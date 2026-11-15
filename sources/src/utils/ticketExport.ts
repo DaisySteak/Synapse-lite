@@ -45,7 +45,7 @@ const COLUMNS: {
     { header: 'Type', width: 13, value: (t) => t.type },
     { header: 'Projet', width: 26, value: (t) => t.project },
     { header: 'Demandeur', width: 22, value: (t) => t.requester },
-    { header: 'Propriétaire', width: 18, value: (t) => t.owner },
+    { header: 'Responsable', width: 18, value: (t) => t.owner },
     { header: 'Contributeurs', width: 26, value: (t) => t.contributors.join(', ') },
     { header: 'Début', width: 12, value: (t) => t.start_date, date: true },
     { header: 'Fin prévisionnelle', width: 12, value: (t) => t.due_date, date: true },

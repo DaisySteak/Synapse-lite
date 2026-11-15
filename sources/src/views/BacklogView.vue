@@ -134,7 +134,7 @@ onMounted(load);
                 multiple
                 clearable
                 compact
-                placeholder="Propriétaire"
+                placeholder="Responsable"
             />
             <button
                 v-if="auth.can('backlog.manage')"

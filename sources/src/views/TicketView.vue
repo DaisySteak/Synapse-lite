@@ -16,6 +16,7 @@ import FileDropzone from '@/components/tickets/FileDropzone.vue';
 import TicketActivity from '@/components/tickets/TicketActivity.vue';
 import TicketComments from '@/components/tickets/TicketComments.vue';
 import TimeSpentInput from '@/components/tickets/TimeSpentInput.vue';
+import DatePresets from '@/components/tickets/DatePresets.vue';
 import AppIcon from '@/components/ui/AppIcon.vue';
 import ColorBadge from '@/components/ui/ColorBadge.vue';
 import EmptyState from '@/components/ui/EmptyState.vue';
@@ -557,7 +558,7 @@ watch(
                         </div>
 
                         <div class="field">
-                            <span class="field-label">Propriétaire</span>
+                            <span class="field-label">Responsable</span>
                             <MultiSelect
                                 v-if="canEdit"
                                 :model-value="ticket.owner_id"
@@ -639,6 +640,12 @@ watch(
                                     :disabled="!canEdit"
                                     @change="save({ start_date: ($event.target as HTMLInputElement).value || null })"
                                 />
+                                <DatePresets
+                                    v-if="canEdit"
+                                    kind="start"
+                                    :model-value="ticket.start_date"
+                                    @choose="save({ start_date: $event })"
+                                />
                             </div>
                             <div class="field">
                                 <label class="field-label" for="due-date">Fin prévisionnelle</label>
@@ -650,6 +657,13 @@ watch(
                                     :value="ticket.due_date ?? ''"
                                     :disabled="!canEdit"
                                     @change="save({ due_date: ($event.target as HTMLInputElement).value || null })"
+                                />
+                                <DatePresets
+                                    v-if="canEdit"
+                                    kind="due"
+                                    :start-date="ticket.start_date"
+                                    :model-value="ticket.due_date"
+                                    @choose="save({ due_date: $event })"
                                 />
                             </div>
                             <div class="field">

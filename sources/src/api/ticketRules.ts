@@ -34,7 +34,7 @@ export const TICKET_ATTRIBUTES: Record<string, string> = {
     epic_id: 'type',
     project_id: 'projet',
     requester_id: 'demandeur',
-    owner_id: 'propriétaire',
+    owner_id: 'responsable',
     supporter_ids: 'contributeurs',
     data_processing_code: 'traitement de données',
     work_folder_url: 'dossier de travail',

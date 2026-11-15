@@ -29,7 +29,7 @@ interface NavSection {
 }
 
 /** Icon of each page of the menu. */
-const ICONS: Record<PagePermission, IconName> = {
+const ICONS: Partial<Record<PagePermission, IconName>> = {
     'pages.board': 'board',
     'pages.backlog': 'inbox',
     'pages.planning': 'planning',
@@ -42,8 +42,7 @@ const ICONS: Record<PagePermission, IconName> = {
     'admin.custom_fields': 'sliders',
     'admin.users': 'users',
     'admin.access': 'shield',
-    'admin.theme': 'palette',
-    'admin.data': 'database',
+    'admin.data': 'palette',
 };
 
 /**
@@ -53,7 +52,12 @@ const ICONS: Record<PagePermission, IconName> = {
  * it to (Gestion des accès).
  */
 const sections: NavSection[] = PAGES.reduce<NavSection[]>((result, page) => {
-    const item: NavItem = { to: page.to, label: page.label, icon: ICONS[page.permission], permission: page.permission };
+    const item: NavItem = {
+        to: page.to,
+        label: page.label,
+        icon: ICONS[page.permission] ?? 'rows',
+        permission: page.permission,
+    };
     const last = result.at(-1);
     if (last && (last.title ?? '') === page.group) last.items.push(item);
     else result.push({ title: page.group || undefined, items: [item] });

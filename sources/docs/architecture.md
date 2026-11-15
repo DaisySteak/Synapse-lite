@@ -147,12 +147,12 @@ Il n'y a ni verrou ni transaction : la cohérence repose sur des écritures peti
 
 ## Gestion des données
 
-Page `views/admin/DataView.vue`, API `src/api/data.ts`, service `backend/services/DataService.ts`, permission
-`admin.data` (administrateurs).
+Page « Paramétrage » `views/admin/DataView.vue` (le thème en haut, `components/admin/ThemePicker.vue`), API
+`src/api/data.ts`, service `backend/services/DataService.ts`, permission `admin.data` (administrateurs).
 
 - **Modification de masse** (`DataService.reassign`) : chaque ticket non supprimé passe par
   `TicketService.update`, donc par les mêmes règles qu'une modification à l'écran (historique, nouveau numéro en
-  cas de changement de type, propriétaire retiré des contributeurs). Les tickets récurrents sont modifiés
+  cas de changement de type, responsable retiré des contributeurs). Les tickets récurrents sont modifiés
   directement.
 - **Sauvegarde** : tous les fichiers du dossier, sous `data/` dans une archive ZIP sans compression écrite par
   `utils/zip.ts` (aucune dépendance).
@@ -172,7 +172,7 @@ Page `views/admin/DataView.vue`, API `src/api/data.ts`, service `backend/service
 
 `utils/themes.ts` décrit les six thèmes (échelle des couleurs de marque, fonds, texte de la barre latérale) et
 les applique en variables CSS sur `<html>`, par-dessus `css/tokens.css` (dont les valeurs sont celles du vert).
-Le choix d'un administrateur (`api/settings.ts`, permission `admin.theme`) est enregistré dans
+Le choix d'un administrateur (`api/settings.ts`, permission `admin.data` de la page Paramétrage) est enregistré dans
 `settings/1.json`, collection lue avec les référentiels : la resynchronisation l'applique chez chacun.
 `main.ts` applique dès l'ouverture le dernier thème mémorisé par le navigateur, pour éviter un changement de
 couleur au chargement.
@@ -206,16 +206,19 @@ navigateur) et réparation des numéros en double.
 
 `src/backend/permissions.ts` reprend `PermissionResolver` et les _policies_ de Synapse : mêmes profils
 (administrateur, lead tech, utilisateur), mêmes permissions, mêmes règles (un utilisateur ne modifie que les
-tickets dont il est propriétaire ou contributeur, etc.). L'interface lit les mêmes drapeaux `can`.
+tickets dont il est responsable ou contributeur, etc.). L'interface lit les mêmes drapeaux `can`.
 Différence voulue : dans Synapse Lite, le lead tech gère aussi les demandeurs (`admin.requesters`) et consulte
 les statistiques (`admin.statistics`).
 
 Gestion des accès : chaque page du menu s'ouvre avec une permission (`pages.board`, `pages.backlog`,
-`pages.planning`, `pages.tickets`, puis les `admin.*`, dont `admin.access` pour la page Gestion des accès). Les pages
-de chaque profil se choisissent dans `views/admin/AccessView.vue` et sont rangées dans `settings/1.json`
-(`access`, profil → permissions). `backend/access.ts` décrit les pages (`PAGES`), les droits par défaut
-(`DEFAULT_ACCESS`) et `accessOf`, qui nettoie la matrice lue et garde toujours `admin.access` aux
-administrateurs. `permissionsFor` ajoute ces pages aux actions fixes du profil (`ACTIONS`) ; `Backend.actor()`
+`pages.planning`, `pages.tickets`, puis les `admin.*`, dont `admin.access` pour la page Gestion des accès), et
+certaines fonctionnalités d'une page aussi (`FEATURES`, sous-lignes de leur page : `board.closed_days`, nombre
+de jours de la colonne Terminé, enregistré pour toute l'équipe dans `settings/1.json` `closed_visible_days`).
+Les droits de chaque profil se choisissent dans `views/admin/AccessView.vue` et sont rangés dans
+`settings/1.json` (`access`, profil → permissions ; `access_known`, droits connus à l'enregistrement : un droit
+ajouté par une version plus récente garde sa valeur par défaut). `backend/access.ts` décrit les pages (`PAGES`),
+les fonctionnalités, les droits par défaut (`DEFAULT_ACCESS`) et `accessOf` / `storedAccess`, qui nettoient la
+matrice lue et gardent toujours `admin.access` aux administrateurs. `permissionsFor` ajoute ces pages aux actions fixes du profil (`ACTIONS`) ; `Backend.actor()`
 lit la matrice à chaque appel, donc l'API refuse aussitôt une page retirée. Le routeur renvoie vers
 `homeRoute()`, la première page du menu encore permise, et `AppLayout` quitte la page ouverte si elle est retirée.
 

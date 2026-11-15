@@ -306,7 +306,7 @@ async function workbookSheets(): Promise<XlsxSheet[]> {
                 value: (t) => (t.deleted_at ? DELETED_STATUS.label : (statuses.get(t.status_code) ?? t.status_code)),
             },
             { header: 'Type', value: (t) => epics.get(t.epic_id)?.title ?? null },
-            { header: 'Propriétaire', value: (t) => userName(t.owner_id) },
+            { header: 'Responsable', value: (t) => userName(t.owner_id) },
             { header: 'Demandeur', value: (t) => requesters.get(t.requester_id) ?? null },
             { header: 'Projet', value: (t) => (t.project_id ? (projects.get(t.project_id) ?? null) : null) },
         ]),
@@ -329,7 +329,7 @@ async function workbookSheets(): Promise<XlsxSheet[]> {
         recordSheet('Champs personnalisés', db.customFields.all()),
         recordSheet('Tickets récurrents', db.recurringTickets.all(), [
             { header: 'Type', value: (t) => epics.get(t.epic_id)?.title ?? null },
-            { header: 'Propriétaire', value: (t) => userName(t.owner_id) },
+            { header: 'Responsable', value: (t) => userName(t.owner_id) },
             { header: 'Demandeur', value: (t) => requesters.get(t.requester_id) ?? null },
         ]),
     ];

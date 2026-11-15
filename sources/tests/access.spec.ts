@@ -3,6 +3,7 @@ import { adminApi } from '@/api/admin';
 import { authApi } from '@/api/auth';
 import { settingsApi } from '@/api/settings';
 import { statisticsApi } from '@/api/statistics';
+import { referenceApi } from '@/api/tickets';
 import { accessOf, DEFAULT_ACCESS, type AccessMatrix } from '@/backend/access';
 import { ADMIN, LEAD, USER, createFolder, openAs, signIn, statusOf, validationErrorsOf } from './helpers';
 
@@ -88,5 +89,32 @@ describe('access by profile', () => {
 
         const record = JSON.parse(files.get('settings/1.json')?.content as string);
         expect(record).toMatchObject({ theme: 'violet', access: { user: ['pages.board'] } });
+    });
+
+    it('grants the days of the Terminé column like a page, to admins and lead techs by default', async () => {
+        const files = await createFolder();
+        await openAs(files, ADMIN);
+        await settingsApi.setClosedVisibleDays(7);
+        expect((await referenceApi.load()).settings.closed_visible_days).toBe(7);
+
+        await openAs(files, LEAD);
+        await settingsApi.setClosedVisibleDays(30);
+
+        await openAs(files, USER);
+        expect((await referenceApi.load()).settings.closed_visible_days).toBe(30);
+        expect(await statusOf(settingsApi.setClosedVisibleDays(5))).toBe(403);
+
+        await openAs(files, ADMIN);
+        expect(await validationErrorsOf(settingsApi.setClosedVisibleDays(-1))).toEqual(['closed_visible_days']);
+        await settingsApi.setAccess({ ...(await settingsApi.access()), user: ['pages.board', 'board.closed_days'] });
+        await openAs(files, USER);
+        expect(await settingsApi.setClosedVisibleDays(5)).toBe(5);
+    });
+
+    it('gives the new rights their default in a folder saved by an older version', () => {
+        const legacy = accessOf({ admin: ['admin.access'], lead_tech: ['pages.board'], user: ['pages.board'] });
+        expect(legacy.admin).toEqual(['board.closed_days', 'admin.access']);
+        expect(legacy.lead_tech).toEqual(['pages.board', 'board.closed_days']);
+        expect(legacy.user).toEqual(['pages.board']);
     });
 });

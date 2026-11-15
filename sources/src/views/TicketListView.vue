@@ -266,7 +266,7 @@ async function exportTickets(format: ExportFormat): Promise<void> {
                 multiple
                 clearable
                 compact
-                placeholder="Propriétaire"
+                placeholder="Responsable"
             />
             <MultiSelect
                 v-model="requesterIds"

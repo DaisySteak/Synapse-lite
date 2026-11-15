@@ -133,7 +133,7 @@ defineExpose({ focus: () => document.getElementById(props.id)?.focus() });
         border-color var(--transition-fast);
 }
 
-.preset:hover:not(:disabled) {
+.preset:hover:not(:disabled):not(.active) {
     border-color: var(--color-brand-500);
     background: var(--color-brand-50);
 }

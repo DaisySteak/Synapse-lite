@@ -3,11 +3,13 @@
  * Kanban board: one column per workflow step except the backlog (prepared
  * apart, see BacklogView), drag and drop between and inside columns, filters
  * (owner, type, project, requester, text; "Mes tickets" by default). The "Terminé" column only shows
- * the tickets closed for less than N days (N editable in the column header,
- * 20 by default).
+ * the tickets closed for less than N days (20 by default). N is the same for the
+ * whole team (data/settings/1.json); it is changed in the column header by the
+ * profiles granted it in "Gestion des accès" (board.closed_days).
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { errorMessage } from '@/api/errors';
+import { settingsApi } from '@/api/settings';
 import { ticketsApi } from '@/api/tickets';
 import PageHeader from '@/components/layout/PageHeader.vue';
 import TicketCard from '@/components/tickets/TicketCard.vue';
@@ -39,7 +41,8 @@ const ownerIds = usePersistentRef<number[]>(
 const epicIds = usePersistentRef<number[]>('synapse.board.epics', []);
 const projectIds = usePersistentRef<number[]>('synapse.board.projects', []);
 const requesterIds = usePersistentRef<number[]>('synapse.board.requesters', []);
-const closedDays = usePersistentRef<number>('synapse.board.closed-days', reference.settings.closed_visible_days);
+const closedDays = ref<number>(reference.settings.closed_visible_days);
+const canChangeClosedDays = computed(() => auth.can('board.closed_days'));
 const search = ref('');
 
 const userOptions = computed(() => reference.users.map((u) => ({ value: u.id, label: u.full_name })));
@@ -115,10 +118,39 @@ watch([ownerIds, epicIds, projectIds, requesterIds], load, { deep: true });
 watch(() => ui.ticketsVersion, load);
 
 let closedDaysTimer: number | undefined;
-watch(closedDays, () => {
+
+// A change of a colleague arrives with the reference data (synchronisation).
+watch(
+    () => reference.settings.closed_visible_days,
+    (days) => {
+        if (days === closedDays.value) return;
+        window.clearTimeout(closedDaysTimer);
+        closedDays.value = days;
+        void load();
+    },
+);
+
+/** Save the number of days for the whole team, once typing stops. */
+function onClosedDaysInput(): void {
     window.clearTimeout(closedDaysTimer);
-    closedDaysTimer = window.setTimeout(load, 400);
-});
+    closedDaysTimer = window.setTimeout(saveClosedDays, 600);
+}
+
+async function saveClosedDays(): Promise<void> {
+    const days = Math.min(3650, Math.max(0, Math.round(Number(closedDays.value) || 0)));
+    closedDays.value = days;
+    if (days === reference.settings.closed_visible_days) return;
+
+    try {
+        await settingsApi.setClosedVisibleDays(days);
+        await reference.load(true);
+        await load();
+        ui.notify(`Colonne Terminé : tickets terminés depuis moins de ${days} jour(s), pour toute l'équipe.`);
+    } catch (error) {
+        closedDays.value = reference.settings.closed_visible_days;
+        ui.notify(errorMessage(error), 'error');
+    }
+}
 
 // Drag and drop ----------------------------------------------------------------
 const draggedId = ref<number | null>(null);
@@ -231,7 +263,7 @@ onBeforeUnmount(() => {
                 multiple
                 clearable
                 compact
-                placeholder="Propriétaire"
+                placeholder="Responsable"
             />
             <MultiSelect
                 v-model="epicIds"
@@ -274,9 +306,9 @@ onBeforeUnmount(() => {
                     <span class="column-title">{{ column.status.label }}</span>
                     <span class="count">{{ column.tickets.length }}</span>
                     <label
-                        v-if="column.status.is_final"
+                        v-if="column.status.is_final && canChangeClosedDays"
                         class="closed-days"
-                        title="Afficher les tickets terminés depuis moins de N jours"
+                        title="Afficher les tickets terminés depuis moins de N jours (pour toute l'équipe)"
                     >
                         &lt;
                         <input
@@ -285,9 +317,17 @@ onBeforeUnmount(() => {
                             min="0"
                             max="3650"
                             aria-label="Nombre de jours"
+                            @input="onClosedDaysInput"
                         />
                         j
                     </label>
+                    <span
+                        v-else-if="column.status.is_final"
+                        class="closed-days"
+                        title="Tickets terminés depuis moins de N jours"
+                    >
+                        &lt; {{ closedDays }} j
+                    </span>
                     <button
                         v-else-if="auth.can('tickets.create')"
                         class="add"

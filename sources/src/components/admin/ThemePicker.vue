@@ -1,13 +1,13 @@
 <script setup lang="ts">
 /**
- * Color theme of the application (administrators): six themes, the green one
- * by default. The choice is saved in the data folder, so it applies to the
- * whole team; each preview is drawn with the colors of its theme.
+ * Color theme of the application (top of the "Paramétrage" page): six themes
+ * on one row, the green one by default. The choice is saved in the data
+ * folder, so it applies to the whole team; each preview is drawn with the
+ * colors of its theme.
  */
 import { computed, ref } from 'vue';
 import { errorMessage } from '@/api/errors';
 import { settingsApi } from '@/api/settings';
-import PageHeader from '@/components/layout/PageHeader.vue';
 import AppIcon from '@/components/ui/AppIcon.vue';
 import { useReferenceStore } from '@/stores/reference';
 import { useUiStore } from '@/stores/ui';
@@ -36,92 +36,74 @@ async function choose(theme: Theme): Promise<void> {
 </script>
 
 <template>
-    <div class="page">
-        <PageHeader
-            title="Thème de couleur"
-            subtitle="Couleurs de l'application pour toute l'équipe ; seuls les administrateurs peuvent les changer"
-        />
-
-        <div class="page-content">
-            <p class="muted intro">
-                Le thème change la barre latérale, les boutons, les liens et les fonds. Les couleurs des statuts, des
-                types de ticket, des projets, des demandeurs et des graphiques restent les mêmes. Les autres
-                utilisateurs voient le nouveau thème en quelques secondes.
-            </p>
-
-            <div class="themes" role="radiogroup" aria-label="Thème de couleur">
-                <button
-                    v-for="theme in THEMES"
-                    :key="theme.code"
-                    type="button"
-                    role="radio"
-                    class="theme"
-                    :class="{ active: theme.code === current }"
-                    :aria-checked="theme.code === current"
-                    :disabled="saving !== null"
-                    :style="themeVariables(theme)"
-                    @click="choose(theme)"
-                >
-                    <span class="preview" aria-hidden="true">
-                        <span class="mini-sidebar">
-                            <span class="mini-logo"></span>
-                            <span class="mini-item selected"></span>
-                            <span class="mini-item"></span>
-                            <span class="mini-item"></span>
-                            <span class="mini-item short"></span>
-                        </span>
-                        <span class="mini-main">
-                            <span class="mini-title"></span>
-                            <span class="mini-card">
-                                <span class="mini-chip">En cours</span>
-                                <span class="mini-line"></span>
-                                <span class="mini-line link"></span>
-                                <span class="mini-button">Enregistrer</span>
-                            </span>
-                        </span>
+    <div class="themes" role="radiogroup" aria-label="Thème de couleur">
+        <button
+            v-for="theme in THEMES"
+            :key="theme.code"
+            type="button"
+            role="radio"
+            class="theme"
+            :class="{ active: theme.code === current }"
+            :aria-checked="theme.code === current"
+            :disabled="saving !== null"
+            :style="themeVariables(theme)"
+            @click="choose(theme)"
+        >
+            <span class="preview" aria-hidden="true">
+                <span class="mini-sidebar">
+                    <span class="mini-logo"></span>
+                    <span class="mini-item selected"></span>
+                    <span class="mini-item"></span>
+                    <span class="mini-item"></span>
+                    <span class="mini-item short"></span>
+                </span>
+                <span class="mini-main">
+                    <span class="mini-title"></span>
+                    <span class="mini-card">
+                        <span class="mini-chip">En cours</span>
+                        <span class="mini-line"></span>
+                        <span class="mini-line link"></span>
+                        <span class="mini-button">Enregistrer</span>
                     </span>
+                </span>
+            </span>
 
-                    <span class="caption">
-                        <span class="name">
-                            {{ theme.label }}
-                            <span v-if="theme.code === DEFAULT_THEME" class="default">par défaut</span>
-                        </span>
-                        <span v-if="theme.code === current" class="state">
-                            <AppIcon name="check" :size="14" /> Thème actuel
-                        </span>
-                        <span v-else-if="saving === theme.code" class="state muted">Application…</span>
-                    </span>
+            <span class="caption">
+                <span class="name">
+                    {{ theme.label }}
+                    <span v-if="theme.code === DEFAULT_THEME" class="default">par défaut</span>
+                </span>
+                <span v-if="theme.code === current" class="state">
+                    <AppIcon name="check" :size="14" /> Thème actuel
+                </span>
+                <span v-else-if="saving === theme.code" class="state muted">Application…</span>
+            </span>
 
-                    <span class="swatches" aria-hidden="true">
-                        <span
-                            v-for="step in ['900', '700', '500', '300', '100'] as const"
-                            :key="step"
-                            :style="{ background: theme.brand[step] }"
-                        ></span>
-                    </span>
-                </button>
-            </div>
-        </div>
+            <span class="swatches" aria-hidden="true">
+                <span
+                    v-for="step in ['900', '700', '500', '300', '100'] as const"
+                    :key="step"
+                    :style="{ background: theme.brand[step] }"
+                ></span>
+            </span>
+        </button>
     </div>
 </template>
 
 <style scoped>
-.intro {
-    max-width: 880px;
-    margin: 0 0 var(--space-5);
-}
-
 .themes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: var(--space-5);
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
+    gap: var(--space-3);
+    overflow-x: auto;
+    padding: 2px 2px var(--space-1);
 }
 
 .theme {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-3);
+    gap: var(--space-2);
+    padding: var(--space-2);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     background: #fff;
@@ -155,7 +137,7 @@ async function choose(theme: Theme): Promise<void> {
 
 .preview {
     display: flex;
-    height: 150px;
+    height: 84px;
     overflow: hidden;
     border-radius: var(--radius-md);
     background: var(--color-background);
@@ -164,9 +146,9 @@ async function choose(theme: Theme): Promise<void> {
 .mini-sidebar {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     width: 30%;
-    padding: 12px 10px;
+    padding: 8px 6px;
     background: linear-gradient(180deg, var(--color-brand-800) 0%, var(--color-brand-950) 100%);
 }
 
@@ -200,8 +182,8 @@ async function choose(theme: Theme): Promise<void> {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 10px;
-    padding: 12px;
+    gap: 6px;
+    padding: 8px;
 }
 
 .mini-title {
@@ -215,8 +197,8 @@ async function choose(theme: Theme): Promise<void> {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 7px;
-    padding: 10px;
+    gap: 5px;
+    padding: 6px;
     border-radius: 6px;
     background: #fff;
     box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
@@ -258,13 +240,14 @@ async function choose(theme: Theme): Promise<void> {
 
 .caption {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-2);
+    gap: 2px var(--space-2);
 }
 
 .name {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
     font-weight: 700;
 }
 

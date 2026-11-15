@@ -1,8 +1,17 @@
 /**
- * Settings of the whole team, chosen by an administrator: the color theme and
- * the pages accessible to each profile.
+ * Settings of the whole team: the color theme and the pages accessible to each
+ * profile, chosen by an administrator, and the days of the "Terminé" column of
+ * the board, chosen by the members granted it.
  */
-import { accessOf, DEFAULT_ACCESS, isPagePermission, ROLES, type AccessMatrix } from '@/backend/access';
+import {
+    ACCESS_ITEMS,
+    accessOf,
+    DEFAULT_ACCESS,
+    isPagePermission,
+    ROLES,
+    storedAccess,
+    type AccessMatrix,
+} from '@/backend/access';
 import { backend } from '@/backend/Backend';
 import { nowIso } from '@/backend/clock';
 import { fieldError, forbidden } from '@/backend/errors';
@@ -41,7 +50,7 @@ export const settingsApi = {
     setTheme: (theme: ThemeCode): Promise<ThemeCode> =>
         call(async () => {
             const actor = backend().actor();
-            if (!actor.can('admin.theme')) throw forbidden();
+            if (!actor.can('admin.data')) throw forbidden();
             if (!isThemeCode(theme)) throw fieldError('theme', 'Thème inconnu.');
 
             const saved = await saveSettings(actor, (record) => {
@@ -51,13 +60,29 @@ export const settingsApi = {
             return saved.theme as ThemeCode;
         }),
 
+    /** Days a closed ticket stays in the "Terminé" column of the board, for the whole team. */
+    setClosedVisibleDays: (days: number): Promise<number> =>
+        call(async () => {
+            const actor = backend().actor();
+            if (!actor.can('board.closed_days')) throw forbidden();
+            if (!Number.isInteger(days) || days < 0 || days > 3650) {
+                throw fieldError('closed_visible_days', 'Le nombre de jours doit être un entier de 0 à 3650.');
+            }
+
+            const saved = await saveSettings(actor, (record) => {
+                record.closed_visible_days = days;
+            });
+
+            return saved.closed_visible_days ?? days;
+        }),
+
     /** Pages accessible to each profile ("Gestion des accès"). */
     access: (): Promise<AccessMatrix> =>
         call(() => {
             const server = backend();
             if (!server.actor().can('admin.access')) throw forbidden();
 
-            return accessOf(server.db.settings.get(1)?.access);
+            return storedAccess(server.db.settings.get(1));
         }),
 
     /**
@@ -76,12 +101,13 @@ export const settingsApi = {
                 }
             }
 
-            const access = accessOf(matrix);
+            const access = accessOf(matrix, ACCESS_ITEMS);
             const saved = await saveSettings(actor, (record) => {
                 record.access = { ...access };
+                record.access_known = [...ACCESS_ITEMS];
             });
 
-            return accessOf(saved.access);
+            return storedAccess(saved);
         }),
 
     /** Back to the access of a new folder. */

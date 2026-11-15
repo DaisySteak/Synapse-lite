@@ -175,7 +175,11 @@ export const referenceApi = {
                     .map(toCustomField),
                 roles: ROLE_OPTIONS,
                 custom_field_types: CUSTOM_FIELD_TYPE_OPTIONS,
-                settings: { ...SETTINGS, theme: themeOf(db.settings.get(1)?.theme).code },
+                settings: {
+                    ...SETTINGS,
+                    theme: themeOf(db.settings.get(1)?.theme).code,
+                    closed_visible_days: db.settings.get(1)?.closed_visible_days ?? SETTINGS.closed_visible_days,
+                },
             };
         }),
 };

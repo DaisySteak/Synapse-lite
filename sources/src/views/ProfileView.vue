@@ -34,11 +34,12 @@ async function changeFolder(): Promise<void> {
 const PERMISSION_LABELS: Record<string, string> = {
     'tickets.create': 'Créer des tickets',
     'tickets.update_any': 'Modifier et réaffecter tous les tickets',
-    'tickets.update_own': 'Modifier ses tickets (propriétaire ou contributeur)',
+    'tickets.update_own': 'Modifier ses tickets (responsable ou contributeur)',
     'tickets.delete': 'Supprimer des tickets',
     'tickets.purge': 'Voir les tickets supprimés, les restaurer et les supprimer définitivement',
-    'admin.data': 'Gérer les données : purge, modifications de masse, sauvegarde, restauration, remise à zéro',
-    'admin.theme': 'Choisir le thème de couleur de l’application pour toute l’équipe',
+    'admin.data':
+        'Paramétrage : thème de couleur, purge, modifications de masse, sauvegarde, restauration, remise à zéro',
+    'board.closed_days': 'Choisir le nombre de jours de la colonne Terminé du tableau, pour toute l’équipe',
     'admin.statistics': 'Consulter les statistiques de l’équipe, des tickets et des demandeurs',
     'backlog.manage': 'Préparer le backlog',
     'comments.moderate': 'Modérer les commentaires et pièces jointes',

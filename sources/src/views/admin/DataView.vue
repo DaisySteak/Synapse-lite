@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /**
- * Data management (administrators): bulk changes of the tickets, backup and
+ * "Paramétrage" page (administrators): the color theme on one row at the top,
+ * then the data management: bulk changes of the tickets, backup and
  * restoration of the data folder, Excel export of every record, purge of the
  * tickets and, at the very bottom, reset of all the data.
  *
@@ -12,6 +13,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { dataApi } from '@/api/data';
 import { errorMessage, fieldErrors } from '@/api/errors';
 import DangerConfirmModal from '@/components/admin/DangerConfirmModal.vue';
+import ThemePicker from '@/components/admin/ThemePicker.vue';
 import PageHeader from '@/components/layout/PageHeader.vue';
 import PurgeTicketsModal from '@/components/tickets/PurgeTicketsModal.vue';
 import AppIcon from '@/components/ui/AppIcon.vue';
@@ -51,7 +53,7 @@ function reloadWith(message: string, afterDownload: boolean): void {
 // --- Bulk reassignment --------------------------------------------------------
 
 const FIELDS: { value: ReassignField; label: string; noun: string }[] = [
-    { value: 'owner', label: 'Propriétaire', noun: 'le propriétaire' },
+    { value: 'owner', label: 'Responsable', noun: 'le responsable' },
     { value: 'epic', label: 'Type de ticket', noun: 'le type' },
     { value: 'requester', label: 'Demandeur', noun: 'le demandeur' },
 ];
@@ -236,9 +238,20 @@ async function reset(confirmation: string, backupFirst: boolean): Promise<void> 
 
 <template>
     <div class="page">
-        <PageHeader title="Gestion des données" subtitle="Opérations sur l'ensemble des données de l'application" />
+        <PageHeader title="Paramétrage" subtitle="Thème de l'application et gestion des données, pour toute l'équipe" />
 
         <div class="page-content sections">
+            <section class="card">
+                <div class="card-body">
+                    <h2 class="section-title">Thème de couleur</h2>
+                    <p class="muted intro">
+                        Change la barre latérale, les boutons, les liens et les fonds pour toute l'équipe, en quelques
+                        secondes. Les couleurs des statuts, types, projets, demandeurs et graphiques ne changent pas.
+                    </p>
+                    <ThemePicker />
+                </div>
+            </section>
+
             <section class="card">
                 <div class="card-body">
                     <h2 class="section-title">Modification de masse</h2>

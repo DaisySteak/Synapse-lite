@@ -21,9 +21,9 @@ export type Permission =
     | 'admin.recurring_tickets'
     | 'admin.data'
     | 'admin.statistics'
-    | 'admin.theme'
     | 'admin.access'
     | 'pages.board'
+    | 'board.closed_days'
     | 'pages.backlog'
     | 'pages.planning'
     | 'pages.tickets';

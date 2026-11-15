@@ -66,6 +66,10 @@ export interface SettingsRecord extends Timestamps {
     theme: string;
     /** Pages accessible to each profile (backend/access.ts), absent until first changed. */
     access?: Partial<Record<string, string[]>>;
+    /** Rights known when `access` was saved (the newer ones keep their default). */
+    access_known?: string[];
+    /** Days a closed ticket stays in the "Terminé" column of the board, for the whole team. */
+    closed_visible_days?: number;
     updated_by: number;
 }
 
