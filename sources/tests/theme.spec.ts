@@ -22,7 +22,7 @@ describe('color theme', () => {
         expect((await referenceApi.load()).settings.theme).toBe('violet');
     });
 
-    it('can only be changed with the Paramétrage page, to a known theme', async () => {
+    it('can only be changed with the Configuration page, to a known theme', async () => {
         const files = await createFolder();
         await openAs(files, ADMIN);
         expect(await validationErrorsOf(settingsApi.setTheme('pink' as ThemeCode))).toEqual(['theme']);

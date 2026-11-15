@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * "Paramétrage" page (administrators): the color theme on one row at the top,
+ * "Configuration" page (administrators): the color theme on one row at the top,
  * then the data management: bulk changes of the tickets, backup and
  * restoration of the data folder, Excel export of every record, purge of the
  * tickets and, at the very bottom, reset of all the data.
@@ -238,7 +238,10 @@ async function reset(confirmation: string, backupFirst: boolean): Promise<void> 
 
 <template>
     <div class="page">
-        <PageHeader title="Paramétrage" subtitle="Thème de l'application et gestion des données, pour toute l'équipe" />
+        <PageHeader
+            title="Configuration"
+            subtitle="Thème de l'application et gestion des données, pour toute l'équipe"
+        />
 
         <div class="page-content sections">
             <section class="card">

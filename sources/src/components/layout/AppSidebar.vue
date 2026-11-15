@@ -42,7 +42,7 @@ const ICONS: Partial<Record<PagePermission, IconName>> = {
     'admin.custom_fields': 'sliders',
     'admin.users': 'users',
     'admin.access': 'shield',
-    'admin.data': 'palette',
+    'admin.data': 'settings',
 };
 
 /**

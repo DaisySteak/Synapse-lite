@@ -60,7 +60,7 @@ export const PAGES: PageAccess[] = [
     { permission: 'admin.custom_fields', label: 'Champs personnalisés', group: 'Paramétrage', to: '/admin/champs' },
     { permission: 'admin.users', label: 'Utilisateurs', group: 'Habilitation', to: '/admin/utilisateurs' },
     { permission: 'admin.access', label: 'Gestion des accès', group: 'Habilitation', to: '/admin/habilitations' },
-    { permission: 'admin.data', label: 'Paramétrage', group: 'Application', to: '/admin/parametrage' },
+    { permission: 'admin.data', label: 'Configuration', group: 'Application', to: '/admin/configuration' },
 ];
 
 /** Feature of a page, granted like a page (sub-row of its page in "Gestion des accès"). */

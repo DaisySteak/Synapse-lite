@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Color theme of the application (top of the "Paramétrage" page): six themes
+ * Color theme of the application (top of the "Configuration" page): six themes
  * on one row, the green one by default. The choice is saved in the data
  * folder, so it applies to the whole team; each preview is drawn with the
  * colors of its theme.

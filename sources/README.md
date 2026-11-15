@@ -68,9 +68,9 @@ un partage réseau. Recommandations :
 Le fonctionnement détaillé (organisation des fichiers, accès simultanés) est décrit dans
 [docs/architecture.md](docs/architecture.md).
 
-### Paramétrage (administrateurs)
+### Configuration (administrateurs)
 
-La page **Application › Paramétrage** affiche en haut les six thèmes de couleur sur une ligne (voir ci-dessous),
+La page **Application › Configuration** affiche en haut les six thèmes de couleur sur une ligne (voir ci-dessous),
 puis les opérations sur l'ensemble des données :
 
 - **Modification de masse** : remplace un responsable, un type de ticket ou un demandeur par un autre sur tous les
@@ -103,7 +103,7 @@ date s'affiche jour par jour et s'enregistre au relâchement.
 
 ### Thème de couleur (administrateurs)
 
-En haut de la page **Application › Paramétrage** : six thèmes (vert par défaut, bleu, violet, bordeaux, orange, ardoise). Le choix
+En haut de la page **Application › Configuration** : six thèmes (vert par défaut, bleu, violet, bordeaux, orange, ardoise). Le choix
 est enregistré dans le dossier de données (`settings/1.json`) et s'applique à toute l'équipe en quelques
 secondes ; chaque navigateur réaffiche le dernier thème dès l'ouverture.
 
@@ -177,7 +177,7 @@ propose alors de le restaurer ou de le supprimer définitivement.
 
 La **suppression définitive** d'un ticket (ticket, commentaires, historique et pièces jointes effacés du dossier)
 se fait ligne par ligne dans **Tous les tickets**, après confirmation. La **purge**, qui supprime définitivement
-soit les tickets déjà supprimés, soit tous les tickets, se trouve dans **Paramétrage** : l'administrateur
+soit les tickets déjà supprimés, soit tous les tickets, se trouve dans **Configuration** : l'administrateur
 doit taper la phrase « Je confirme la purge des tickets » avant que le bouton ne s'active.
 
 Ces opérations sont irréversibles, hors historique des versions de SharePoint. Les numéros des tickets effacés ne

@@ -38,7 +38,7 @@ const PERMISSION_LABELS: Record<string, string> = {
     'tickets.delete': 'Supprimer des tickets',
     'tickets.purge': 'Voir les tickets supprimés, les restaurer et les supprimer définitivement',
     'admin.data':
-        'Paramétrage : thème de couleur, purge, modifications de masse, sauvegarde, restauration, remise à zéro',
+        'Configuration : thème de couleur, purge, modifications de masse, sauvegarde, restauration, remise à zéro',
     'board.closed_days': 'Choisir le nombre de jours de la colonne Terminé du tableau, pour toute l’équipe',
     'admin.statistics': 'Consulter les statistiques de l’équipe, des tickets et des demandeurs',
     'backlog.manage': 'Préparer le backlog',

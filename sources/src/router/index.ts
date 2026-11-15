@@ -110,12 +110,13 @@ const routes: RouteRecordRaw[] = [
                 meta: { permission: 'admin.custom_fields', title: 'Champs personnalisés' },
             },
             {
-                path: 'admin/parametrage',
+                path: 'admin/configuration',
                 name: 'admin-settings',
                 component: () => import('@/views/admin/DataView.vue'),
-                meta: { permission: 'admin.data', title: 'Paramétrage' },
+                meta: { permission: 'admin.data', title: 'Configuration' },
             },
-            // Pages merged into "Paramétrage" (1.12.0).
+            // Pages merged into "Configuration" (1.12.0, named « Paramétrage » until 1.12.1).
+            { path: 'admin/parametrage', redirect: { name: 'admin-settings' } },
             { path: 'admin/donnees', redirect: { name: 'admin-settings' } },
             { path: 'admin/theme', redirect: { name: 'admin-settings' } },
             {

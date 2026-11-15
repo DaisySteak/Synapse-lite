@@ -147,7 +147,7 @@ Il n'y a ni verrou ni transaction : la cohérence repose sur des écritures peti
 
 ## Gestion des données
 
-Page « Paramétrage » `views/admin/DataView.vue` (le thème en haut, `components/admin/ThemePicker.vue`), API
+Page « Configuration » `views/admin/DataView.vue` (le thème en haut, `components/admin/ThemePicker.vue`), API
 `src/api/data.ts`, service `backend/services/DataService.ts`, permission `admin.data` (administrateurs).
 
 - **Modification de masse** (`DataService.reassign`) : chaque ticket non supprimé passe par
@@ -172,7 +172,7 @@ Page « Paramétrage » `views/admin/DataView.vue` (le thème en haut, `componen
 
 `utils/themes.ts` décrit les six thèmes (échelle des couleurs de marque, fonds, texte de la barre latérale) et
 les applique en variables CSS sur `<html>`, par-dessus `css/tokens.css` (dont les valeurs sont celles du vert).
-Le choix d'un administrateur (`api/settings.ts`, permission `admin.data` de la page Paramétrage) est enregistré dans
+Le choix d'un administrateur (`api/settings.ts`, permission `admin.data` de la page Configuration) est enregistré dans
 `settings/1.json`, collection lue avec les référentiels : la resynchronisation l'applique chez chacun.
 `main.ts` applique dès l'ouverture le dernier thème mémorisé par le navigateur, pour éviter un changement de
 couleur au chargement.

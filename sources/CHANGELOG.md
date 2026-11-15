@@ -2,6 +2,19 @@
 
 Ce projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
+## [1.12.2] - 2026-11-15
+
+### Modifié
+
+- Menu : la page Configuration a pour icône une roue crantée au lieu d'une palette.
+
+## [1.12.1] - 2026-11-15
+
+### Modifié
+
+- La page Paramétrage du menu Application s'appelle **Configuration**, pour ne plus se confondre avec le groupe
+  Paramétrage du menu. Ses anciens liens y mènent.
+
 ## [1.12.0] - 2026-11-15
 
 ### Ajouté
